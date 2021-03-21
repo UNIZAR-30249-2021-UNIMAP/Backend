@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: app-server
+
+#Tomcat Embedded Server Configuration
+server:
+  port: 8001
+
+#Eureka Configuration Properties
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka-server:8761/eureka
+
+

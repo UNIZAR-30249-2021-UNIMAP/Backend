@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: gateway
+
+#Tomcat Embedded Server Configuration
+server:
+  port: 7000
+
+#Zuul Configuration Properties
+zuul:
+  routes:
+    app-server:
+      path: app-server/**
+      serviceId: app-server
+
+#Eureka Configuration Properties
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka-server:8761/eureka
