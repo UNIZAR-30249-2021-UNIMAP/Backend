@@ -35,7 +35,11 @@ services:
       - "./enabled_plugins:/etc/rabbitmq/enabled_plugins"
     networks:
       - rabbit-net
-
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "5672" ]
+      interval: 5s
+      timeout: 15s
+      retries: 1
 
 
   geoserver:

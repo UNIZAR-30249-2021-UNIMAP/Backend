@@ -1,5 +1,6 @@
 package com.labis.gateway;
 
+
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -13,8 +14,14 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 public class GatewayApplication {
 
-    @Value("${spring.rabbitmq.addresses}")
+    @Value("${spring.rabbitmq.host}")
     String host;
+
+    @Value("${spring.rabbitmq.port}")
+    String port;
+
+    @Value("${spring.rabbitmq.addresses}")
+    String addresses;
 
     @Value("${spring.rabbitmq.username}")
     String username;
@@ -29,8 +36,7 @@ public class GatewayApplication {
 
     @Bean
     CachingConnectionFactory connectionFactory() {
-        CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory();
-        cachingConnectionFactory.setAddresses(host);
+        CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(addresses);
         cachingConnectionFactory.setUsername(username);
         cachingConnectionFactory.setPassword(password);
         return cachingConnectionFactory;

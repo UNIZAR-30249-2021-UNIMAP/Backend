@@ -3,7 +3,9 @@ spring:
     name: gateway
   #RabbitMQ Configuration Properties
   rabbitmq:
-    addresses: localhost:5672
+    addresses: rabbit://guest:guest@rabbit:5672/
+    host: 172.20.0.2
+    port: 5672
     password: guest
     username: guest
 
