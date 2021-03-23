@@ -8,16 +8,12 @@ import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
-@EnableZuulProxy
-@EnableDiscoveryClient
 public class GatewayApplication {
 
-    @Value("${spring.rabbitmq.host}")
+    @Value("${spring.rabbitmq.addresses}")
     String host;
 
     @Value("${spring.rabbitmq.username}")
@@ -33,7 +29,8 @@ public class GatewayApplication {
 
     @Bean
     CachingConnectionFactory connectionFactory() {
-        CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(host);
+        CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory();
+        cachingConnectionFactory.setAddresses(host);
         cachingConnectionFactory.setUsername(username);
         cachingConnectionFactory.setPassword(password);
         return cachingConnectionFactory;
