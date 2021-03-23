@@ -1,6 +1,12 @@
 spring:
   application:
     name: gateway
+  #RabbitMQ Configuration Properties
+  rabbitmq:
+    host: rabbit
+    password: guest
+    port: 5672
+    username: guest
 
 #Tomcat Embedded Server Configuration
 server:
@@ -12,6 +18,9 @@ zuul:
     app-server:
       path: app-server/**
       serviceId: app-server
+    rabbit:
+      path: api/**
+      serviceId: gateway
 
 #Eureka Configuration Properties
 eureka:

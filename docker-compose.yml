@@ -10,6 +10,8 @@ services:
   gateway:
     build: ./gateway
     restart: always
+    depends_on:
+      - rabbit
     container_name: gateway
     ports:
       - '7000:7000'
@@ -17,7 +19,23 @@ services:
   app-server:
     build: ./app-server
     restart: always
+    depends_on:
+      - rabbit
     container_name: app-server
+
+  rabbit:
+    image: "rabbitmq"
+    container_name: rabbit
+    environment:
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+      RABBITMQ_DEFAULT_VHOST: "/"
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    volumes:
+      - "./enabled_plugins:/etc/rabbitmq/enabled_plugins"
+
 
   geoserver:
     image: kartoza/geoserver:2.16.2

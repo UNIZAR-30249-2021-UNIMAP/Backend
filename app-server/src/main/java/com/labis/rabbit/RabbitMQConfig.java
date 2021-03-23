@@ -1,43 +1,57 @@
-package com.labis.gateway;
+package com.labis.rabbit;
 
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-@SpringBootApplication
-@EnableZuulProxy
-@EnableDiscoveryClient
-public class GatewayApplication {
+@Configuration
+public class RabbitMQConfig {
 
-    @Value("${spring.rabbitmq.host}")
-    String host;
+    private static final String queue = "user.queue";
 
+    private static final String exchange = "user.exchange";
+
+    private static final String routingKey = "user.routingkey";
     @Value("${spring.rabbitmq.username}")
-    String username;
-
+    private String username;
     @Value("${spring.rabbitmq.password}")
-    String password;
+    private String password;
+    @Value("${spring.rabbitmq.host}")
+    private String host;
 
-    public static void main(String[] args) {
-
-        SpringApplication.run(GatewayApplication.class, args);
+    @Bean
+    Queue queue() {
+        return new Queue(queue, true);
     }
 
     @Bean
-    CachingConnectionFactory connectionFactory() {
+    Exchange myExchange() {
+        return ExchangeBuilder.directExchange(exchange).durable(true).build();
+    }
+
+    @Bean
+    Binding binding() {
+        return BindingBuilder
+                .bind(queue())
+                .to(myExchange())
+                .with(routingKey)
+                .noargs();
+    }
+
+    @Bean
+    public ConnectionFactory connectionFactory() {
         CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(host);
         cachingConnectionFactory.setUsername(username);
         cachingConnectionFactory.setPassword(password);
         return cachingConnectionFactory;
     }
+
     @Bean
     public MessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
@@ -49,5 +63,4 @@ public class GatewayApplication {
         rabbitTemplate.setMessageConverter(jsonMessageConverter());
         return rabbitTemplate;
     }
-
 }
