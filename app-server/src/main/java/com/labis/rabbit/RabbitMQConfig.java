@@ -52,15 +52,4 @@ public class RabbitMQConfig {
                 .noargs();
     }
 
-//    @Bean
-//    public ConnectionFactory connectionFactory() {
-//        CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory();
-//        cachingConnectionFactory.setUsername(username);
-//        cachingConnectionFactory.setPassword(password);
-//        return cachingConnectionFactory;
-//    }
-
-
-
-
 }
