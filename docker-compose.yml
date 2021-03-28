@@ -8,8 +8,6 @@ services:
     container_name: gateway
     ports:
       - '7000:7000'
-    networks:
-      - rabbit-net
 
   app-server:
     build: ./app-server
@@ -17,8 +15,6 @@ services:
     depends_on:
       - rabbit
     container_name: app-server
-    networks:
-      - rabbit-net
 
   rabbit:
     image: "rabbitmq"
@@ -30,17 +26,8 @@ services:
       RABBITMQ_DEFAULT_VHOST: "/"
     ports:
       - "15672:15672"
-      - "5672:5672"
     volumes:
       - "./enabled_plugins:/etc/rabbitmq/enabled_plugins"
-    networks:
-      - rabbit-net
-    healthcheck:
-      test: [ "CMD", "nc", "-z", "localhost", "5672" ]
-      interval: 5s
-      timeout: 15s
-      retries: 1
-
 
   geoserver:
     image: kartoza/geoserver:2.16.2
@@ -70,9 +57,3 @@ volumes:
       external: true
     dbdata:
       external: true
-
-networks:
-  rabbit-net:
-    external:
-      name: rabbit-net
-

@@ -1,6 +1,5 @@
-package com.labis.rabbit;
+package com.labis.gateway;
 
-import com.labis.gateway.Receiver;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
