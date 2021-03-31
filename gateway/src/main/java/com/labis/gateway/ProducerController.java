@@ -19,9 +19,13 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping(value="/api/v1/")
 public class ProducerController {
-    static final String topicExchangeName = "spring-boot-exchange";
+    static final String topicExchangeName = "gateway";
+    static final String destinationTopicExchangeName = "app-server";
 
-    static final String queueName = "spring-boot";
+    static final String sendingQueueName = "app-server";
+    static final String receivingQueueName = "gateway";
+
+    static final String routingKey = "bar.foo.baz";
 
     private final RabbitTemplate rabbitTemplate;
     private final Receiver receiver;
@@ -34,7 +38,7 @@ public class ProducerController {
 
     @Bean
     Queue queue() {
-        return new Queue(queueName, false);
+        return new Queue(sendingQueueName, false);
     }
 
     @Bean
@@ -52,7 +56,7 @@ public class ProducerController {
                                              MessageListenerAdapter listenerAdapter) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.setQueueNames(queueName);
+        container.setQueueNames(receivingQueueName);
         container.setMessageListener(listenerAdapter);
         return container;
     }
@@ -65,7 +69,7 @@ public class ProducerController {
     @GetMapping(value = "user")
     public String publishUserDetails() throws InterruptedException {
         System.out.println("Sending message...");
-        rabbitTemplate.convertAndSend(topicExchangeName, "foo.bar.baz", "Hello from RabbitMQ!");
+        rabbitTemplate.convertAndSend(destinationTopicExchangeName, routingKey, "Hello from RabbitMQ!");
         receiver.getLatch().await(10000, TimeUnit.MILLISECONDS);
         return "Ok";
     }

@@ -1,6 +1,5 @@
-package com.labis.rabbit;
+package com.labis.appserver;
 
-import com.labis.gateway.Receiver;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
@@ -10,19 +9,19 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
 
 import java.util.concurrent.TimeUnit;
 
-
-@RestController
-@RequestMapping(value="/api/v1/")
+@Controller
 public class ProducerController {
-    static final String topicExchangeName = "spring-boot-exchange";
+    static final String topicExchangeName = "app-server";
+    static final String destinationTopicExchangeName = "gateway";
 
-    static final String queueName = "spring-boot";
+    static final String sendingQueueName = "gateway";
+    static final String receivingQueueName = "app-server";
+
+    static final String routingKey = "foo.bar.baz";
 
     private final RabbitTemplate rabbitTemplate;
     private final Receiver receiver;
@@ -35,7 +34,7 @@ public class ProducerController {
 
     @Bean
     Queue queue() {
-        return new Queue(queueName, false);
+        return new Queue(sendingQueueName, false);
     }
 
     @Bean
@@ -45,7 +44,7 @@ public class ProducerController {
 
     @Bean
     Binding binding(Queue queue, TopicExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with("foo.bar.#");
+        return BindingBuilder.bind(queue).to(exchange).with("bar.foo.#");
     }
 
     @Bean
@@ -53,7 +52,7 @@ public class ProducerController {
                                              MessageListenerAdapter listenerAdapter) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.setQueueNames(queueName);
+        container.setQueueNames(receivingQueueName);
         container.setMessageListener(listenerAdapter);
         return container;
     }
@@ -63,10 +62,9 @@ public class ProducerController {
         return new MessageListenerAdapter(receiver, "receiveMessage");
     }
 
-    @GetMapping(value = "user")
     public String publishUserDetails() throws InterruptedException {
         System.out.println("Sending message...");
-        rabbitTemplate.convertAndSend(topicExchangeName, "foo.bar.baz", "Hello from RabbitMQ!");
+        rabbitTemplate.convertAndSend(destinationTopicExchangeName, routingKey, "Hello from RabbitMQ!");
         receiver.getLatch().await(10000, TimeUnit.MILLISECONDS);
         return "Ok";
     }
