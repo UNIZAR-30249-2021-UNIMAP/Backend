@@ -15,11 +15,10 @@ import java.util.concurrent.TimeUnit;
 
 @Controller
 public class ProducerController {
-    static final String topicExchangeName = "app-server";
-    static final String destinationTopicExchangeName = "gateway";
+    static final String topicExchangeName = "gatewayExchange";
 
-    static final String sendingQueueName = "gateway";
-    static final String receivingQueueName = "app-server";
+    static final String sendingQueueName = "gatewayQueue";
+    static final String receivingQueueName = "gatewayQueue";
 
     static final String routingKey = "foo.bar.baz";
 
@@ -64,7 +63,7 @@ public class ProducerController {
 
     public String publishUserDetails() throws InterruptedException {
         System.out.println("Sending message...");
-        rabbitTemplate.convertAndSend(destinationTopicExchangeName, routingKey, "Hello from RabbitMQ!");
+        rabbitTemplate.convertAndSend(topicExchangeName, routingKey, "Hello from appserver!");
         receiver.getLatch().await(10000, TimeUnit.MILLISECONDS);
         return "Ok";
     }
