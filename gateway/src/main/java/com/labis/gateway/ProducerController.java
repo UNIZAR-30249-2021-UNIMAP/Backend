@@ -47,7 +47,7 @@ public class ProducerController {
 
     @Bean
     Binding binding(Queue queue, TopicExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with("kk.bar.#");
+        return BindingBuilder.bind(queue).to(exchange).with("foo.bar.#");
     }
 
     @Bean
