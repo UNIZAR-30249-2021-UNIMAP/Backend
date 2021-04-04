@@ -7,6 +7,9 @@ spring:
     port: 5672
     password: guest
     username: guest
+  profiles:
+    active: configuration, receiver
+
 
 #Tomcat Embedded Server Configuration
 server:
