@@ -9,18 +9,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value="/api/v1/")
 public class Sender {
+
     @Autowired
     private RabbitTemplate template;
 
-    static final String queueName = "appserver.queue";
-
-    static final String routingKey = "bar.foo.baz";
+    static final String directExchangeName = "tut.rpc";
 
     @GetMapping(value = "user")
-    public String publishUserDetails() throws InterruptedException {
+    public void publishUserDetails() {
         System.out.println("Sending message...");
-        //template.convertAndSend(direct.getName(), routingKey, "Hello from gateway!");
-        template.convertAndSend(queueName, "Hello from gateway!");
-        return "Ok";
+        String response = (String) template.convertSendAndReceive(directExchangeName, "rpc", "Hello from gateway!");
+        System.out.println("Received in 'gateway/Sender' <" + response + ">");
     }
 }
