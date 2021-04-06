@@ -10,7 +10,6 @@ spring:
   profiles:
     active: configuration, receiver
 
-
 #Tomcat Embedded Server Configuration
 server:
   port: 8001
