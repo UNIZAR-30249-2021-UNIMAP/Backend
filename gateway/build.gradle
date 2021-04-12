@@ -33,6 +33,10 @@ dependencyManagement {
     }
 }
 
+task stage {
+    dependsOn build
+}
+
 test {
     //useJUnitPlatform()
 }
