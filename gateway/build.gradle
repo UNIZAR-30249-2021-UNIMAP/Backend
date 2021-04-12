@@ -33,9 +33,8 @@ dependencyManagement {
     }
 }
 
-task stage {
-    dependsOn build
-}
+task stage(dependsOn: ['build', 'clean'])
+build.mustRunAfter clean
 
 test {
     //useJUnitPlatform()
