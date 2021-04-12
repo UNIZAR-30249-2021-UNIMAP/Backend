@@ -34,7 +34,6 @@ dependencyManagement {
     }
 }
 
-stage.dependsOn(copyToLib)
 
 test {
     //useJUnitPlatform()
