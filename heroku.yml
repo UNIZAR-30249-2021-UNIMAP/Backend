@@ -1,4 +1,7 @@
 build:
+  command:
+    - app-server/gradlew build
+    - gateway/gradlew build
   docker:
     app-server: app-server/Dockerfile
     gateway: gateway/Dockerfile
