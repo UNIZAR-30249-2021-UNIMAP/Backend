@@ -30,10 +30,10 @@ jobs:
         run: chmod u+x gateway/gradlew app-server/gradlew
 
       - name: Build gateway
-        run: gateway/gradlew build
+        run: ./gateway/gradlew build
 
       - name: Build app-server
-        run: app-server/gradlew build
+        run: ./app-server/gradlew build
 
       - name: Restart containers
         run: docker-compose down && docker-compose up
