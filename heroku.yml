@@ -1,0 +1,10 @@
+build:
+  command:
+    - app-server/gradlew build
+    - gateway/gradlew build
+  docker:
+    app-server: app-server/Dockerfile
+    gateway: gateway/Dockerfile
+run:
+  app-server: bundle exec puma -C config/puma.rb
+  gateway: bundle exec puma -C config/puma.rb
