@@ -29,6 +29,9 @@ jobs:
       - name: Change gradlew permissions
         run: chmod u+x gateway/gradlew app-server/gradlew
 
+      - name: Echo message
+        run: echo "Let's build apps"
+
       - name: Build gateway
         run: gateway/gradlew build
 	
