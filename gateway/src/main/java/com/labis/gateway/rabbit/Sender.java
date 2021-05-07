@@ -4,6 +4,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -16,9 +17,10 @@ public class Sender {
     static final String directExchangeName = "tut.rpc";
 
     @GetMapping(value = "user")
-    public void publishUserDetails() {
+    public String publishUserDetails(@RequestParam("nombre") String nombre) {
         System.out.println("Sending message...");
-        String response = (String) template.convertSendAndReceive(directExchangeName, "rpc", "Hello from gateway!");
+        String response = (String) template.convertSendAndReceive(directExchangeName, "rpc", nombre);
         System.out.println("Received in 'gateway/Sender' <" + response + ">");
+        return response;
     }
 }

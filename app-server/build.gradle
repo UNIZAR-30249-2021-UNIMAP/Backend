@@ -24,6 +24,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.1.4'
+    implementation group: 'net.minidev', name: 'json-smart', version: '1.0.9'
     //runtimeOnly 'com.h2database:h2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
