@@ -39,7 +39,7 @@ jobs:
         run: docker-compose down && docker-compose up -d
       
       - name: Setting up database access
-        run: docker exec backend-database 
+        run: docker exec backend-database echo "host    all             all             0.0.0.0/0            md5" >>  /etc/postgresql/9.6/main/pg_hba.conf 
       # Runs a set of commands using the runners shell
 #      - name: Set containers up
 #        run: |
