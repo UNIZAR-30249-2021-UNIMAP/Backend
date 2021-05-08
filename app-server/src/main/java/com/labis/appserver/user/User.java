@@ -1,4 +1,4 @@
-package com.labis.appserver.User;
+package com.labis.appserver.user;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
