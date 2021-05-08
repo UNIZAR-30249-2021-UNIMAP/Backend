@@ -35,8 +35,11 @@ jobs:
       - name: Build app-server
         run: cd app-server && ./gradlew build
 
-      - name: Restart containers
-        run: docker-compose down && docker-compose up -d
+      - name: Containers down
+        run: docker-compose down
+        
+      - name: Containers up
+        run: docker-compose up --build -d
       
       - name: Setting up database access
         run: docker exec backend-database echo "host    all             all             0.0.0.0/0            md5" >>  /etc/postgresql/9.6/main/pg_hba.conf 
