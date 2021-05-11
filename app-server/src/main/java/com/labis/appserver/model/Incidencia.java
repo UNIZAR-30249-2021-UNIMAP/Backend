@@ -1,2 +1,5 @@
-package com.labis.appserver.model;public class Incidencia {
+package com.labis.appserver.model;
+
+public class Incidencia {
+
 }
