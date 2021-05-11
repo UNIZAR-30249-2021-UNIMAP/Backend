@@ -1,2 +1,3 @@
-package com.labis.appserver.common;public enum priority {
+package com.labis.appserver.common;
+public enum Priority {
 }
