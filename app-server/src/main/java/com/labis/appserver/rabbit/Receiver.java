@@ -3,14 +3,12 @@ package com.labis.appserver.rabbit;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import com.labis.appserver.controllers.Holamundo;
 
 public class Receiver {
 
     @Autowired
     private JdbcTemplate jdbc;
 
-    private Holamundo holamundo;
 
     @RabbitListener(queues = "tut.rpc.requests")
     // @SendTo("tut.rpc.replies") used when the
