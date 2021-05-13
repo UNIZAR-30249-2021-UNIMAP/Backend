@@ -10,6 +10,18 @@ spring:
   profiles:
     active: configuration, receiver
 
+  datasource:
+    platform: postgres
+    initialization-mode: always
+    initialize: true
+    url: jdbc:postgresql://localhost:25432/proyectodb?createDatabaseIfNotExist=true
+    username: unimap
+    password: adminunimap123
+
+    hibernate:
+      ddl-auto: create
+      show-sql: true
+
 #Tomcat Embedded Server Configuration
 server:
   port: 8001

@@ -1,2 +1,8 @@
-package com.labis.appserver.common;public enum IssueStatus {
+package com.labis.appserver.common;
+
+public enum IssueStatus {
+    REPORTADO,
+    PENDIENTE,
+    RECHAZADA,
+    FINALIZADA
 }
