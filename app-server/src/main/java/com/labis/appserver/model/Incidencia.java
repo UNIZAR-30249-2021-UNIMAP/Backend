@@ -8,34 +8,26 @@ import java.sql.Timestamp;
 import java.time.Instant;
 
 @Entity
-@Table(name = "incidencias")
 public class Incidencia {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     //@OneToMany()
-    @Column()
     private Long idEspacio;
 
     //@OneToMany()
-    @Column()
     private Long idPersonalMantenimiento;
 
-    @Column()
     private String estado;
 
-    @Column()
     private String prioridad;
 
-    @Column(name = "motivo_rechazo")
     private String motivoRechazo;
 
-    @Column(name = "timestamp_asignado")
     private Timestamp asignadoTimeStamp;
 
-    @Column(name = "timestamp_finalizado")
     private Timestamp finalizadoTimeStamp;
 
     public Incidencia() {

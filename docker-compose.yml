@@ -9,19 +9,13 @@ services:
     ports:
       - '7000:7000'
 
-  app-server:
-    build: ./app-server
-    restart: always
-    depends_on:
-      - rabbit
-      - postgis
-    container_name: app-server
-    environment:
-      - "SPRING_DATASOURCE_URL=jdbc:postgresql://backend_postgis_1:5432/proyectodb"
-      - "SPRING_DATASOURCE_USERNAME=unimap"
-      - "SPRING_DATASOURCE_PASSWORD=adminunimap123"
-      - "SPRING_DATASOURCE_DRIVER-CLASS-NAME=org.postgresql.Driver"
-      - "SPRING_JPA_HIBERNATE_DDL_AUTO=update"
+ # app-server:
+ #   build: ./app-server
+ #   restart: always
+ #   depends_on:
+ #     - rabbit
+ #     - postgis
+ #   container_name: app-server
 
   rabbit:
     image: "rabbitmq"

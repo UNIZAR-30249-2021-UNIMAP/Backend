@@ -14,13 +14,14 @@ spring:
     platform: postgres
     initialization-mode: always
     initialize: true
-    url: jdbc:postgresql://localhost:25432/proyectodb?createDatabaseIfNotExist=true
+    url: jdbc:postgresql://localhost:25432/proyectodb
     username: unimap
     password: adminunimap123
 
     hibernate:
-      ddl-auto: create
+      ddl-auto: create-drop
       show-sql: true
+    #driver-class-name: org.postgresql.Driver
 
 #Tomcat Embedded Server Configuration
 server:
