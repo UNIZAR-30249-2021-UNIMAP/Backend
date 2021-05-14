@@ -10,6 +10,11 @@ spring:
   profiles:
     active: configuration, receiver
 
+  jpa:
+    hibernate:
+      ddl-auto: create
+      show-sql: true
+
   datasource:
     platform: postgres
     initialization-mode: always
@@ -18,9 +23,6 @@ spring:
     username: unimap
     password: adminunimap123
 
-    hibernate:
-      ddl-auto: create-drop
-      show-sql: true
     #driver-class-name: org.postgresql.Driver
 
 #Tomcat Embedded Server Configuration
