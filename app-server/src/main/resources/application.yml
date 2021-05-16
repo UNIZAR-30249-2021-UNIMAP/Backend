@@ -12,18 +12,16 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
       show-sql: true
 
   datasource:
     platform: postgres
-    initialization-mode: always
-    initialize: true
-    url: jdbc:postgresql://localhost:25432/proyectodb
+    url: jdbc:postgresql://backend_postgis_1:5432/proyectodb
+    #url: jdbc:postgresql://localhost:25432/proyectodb
     username: unimap
     password: adminunimap123
-
-    #driver-class-name: org.postgresql.Driver
+    driver-class-name: org.postgresql.Driver
 
 #Tomcat Embedded Server Configuration
 server:

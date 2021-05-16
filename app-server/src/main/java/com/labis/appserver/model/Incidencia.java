@@ -17,8 +17,9 @@ public class Incidencia {
     //@OneToMany()
     private Long idEspacio;
 
-    //@OneToMany()
-    private Long idPersonalMantenimiento;
+    @OneToOne
+    @JoinColumn(name="personalMantenimiento_id")
+    private PersonalMantenimiento idPersonalMantenimiento;
 
     private String estado;
 
@@ -57,9 +58,9 @@ public class Incidencia {
         this.finalizadoTimeStamp = Timestamp.from(Instant.now());
     }
 
-    public void asignar(Long idMantenimiento) {
+    public void asignar(PersonalMantenimiento personal) {
         this.estado = IssueStatus.PENDIENTE.toString();
-        this.idPersonalMantenimiento = idMantenimiento;
+        this.idPersonalMantenimiento = personal;
         this.asignadoTimeStamp = Timestamp.from(Instant.now());
 
     }

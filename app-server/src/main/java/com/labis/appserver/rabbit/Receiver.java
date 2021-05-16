@@ -7,7 +7,7 @@ import com.labis.appserver.controllers.HolaMundo;
 
 import java.util.ArrayList;
 
-import static com.labis.appserver.model.Constantes.*;
+import static com.labis.appserver.common.Constantes.*;
 
 public class Receiver {
 

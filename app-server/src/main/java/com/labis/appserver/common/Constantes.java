@@ -1,4 +1,4 @@
-package com.labis.appserver.model;
+package com.labis.appserver.common;
 
 public class Constantes {
     public static final String STRING_USERS = "users";
