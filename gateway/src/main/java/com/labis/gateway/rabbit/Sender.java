@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.util.ArrayList;
-
+import static com.labis.gateway.common.Constantes.*;
 
 @RestController
-@RequestMapping(value="/api/v1/")
+@RequestMapping(value="/api/v1/")  // Quitar
 public class Sender {
 
     @Autowired
@@ -17,26 +17,140 @@ public class Sender {
 
     static final String directExchangeName = "tut.rpc";
 
-    @GetMapping(value = "user")
-    public String publishUserDetails(@RequestParam("nombre") String nombre) {
+    @PostMapping(value = STRING_LOGIN)
+    public String publishUserDetails(@RequestParam("email") String email, @RequestParam("contrasena") String contrasena) {
         System.out.println("Sending message...");
-        ArrayList<String> users = new ArrayList<String>();
-        users.add("users");
-        users.add(nombre);
-        String response = (String) template.convertSendAndReceive(directExchangeName, "rpc", users);
+        ArrayList<String> infoUser = new ArrayList<String>();
+        infoUser.add(STRING_LOGIN);
+        infoUser.add(email);
+        infoUser.add(contrasena);
+        String response = (String) template.convertSendAndReceive(directExchangeName, "rpc", infoUser);
         System.out.println("Received in 'gateway/Sender' <" + response + ">");
         return response;
     }
 
-    @PostMapping(value = "incidencia")
-    public String publishUserDetails(@RequestParam("descripcion") String descripcion,
-                                     @RequestParam("email") String email,
-                                     @RequestParam("IDEspacio") String IDEspacio) {
+    PostMapping(value = STRING_REGISTRO)
+    public String publishUserDetails(@RequestParam("nombreUsuario") String nombre,
+     @RequestParam("email") String email, @RequestParam("contrasena") String contrasena) {
+        System.out.println("Sending message...");
+        ArrayList<String> infoUser = new ArrayList<String>();
+        infoUser.add(STRING_REGISTRO);
+        infoUser.add(nombre);
+        infoUser.add(email);
+        infoUser.add(contrasena);
+        String response = (String) template.convertSendAndReceive(directExchangeName, "rpc", infoUser);
+        System.out.println("Received in 'gateway/Sender' <" + response + ">");
+        return response;
+    }
+
+    @GetMapping(value = STRING_INCIDENCIA)
+    public String publishUserDetails() {
         System.out.println("Sending message...");
         ArrayList<String> incidencia = new ArrayList<String>();
-        incidencia.add("incidencias");
-        incidencia.add(descripcion); incidencia.add(email); incidencia.add(IDEspacio);
+        incidencia.add(STRING_INCIDENCIA);
         String response = (String) template.convertSendAndReceive(directExchangeName, "rpc", incidencia);
+        System.out.println("Received in 'gateway/Sender' <" + response + ">");
+        return response;
+    }
+
+    @PostMapping(value = STRING_INCIDENCIA_MANTENIMIENTO)
+    public String publishUserDetails(@RequestParam("idIncidencia") String idIncidencia) {
+        System.out.println("Sending message...");
+        ArrayList<String> incidencia = new ArrayList<String>();
+        incidencia.add(STRING_INCIDENCIA_MANTENIMIENTO);
+        incidencia.add(idIncidencia);
+        String response = (String) template.convertSendAndReceive(directExchangeName, "rpc", incidencia);
+        System.out.println("Received in 'gateway/Sender' <" + response + ">");
+        return response;
+    }
+
+    @GetMapping(value = STRING_INCIDENCIA_MANTENIMIENTO)
+    public String publishUserDetails() {
+        System.out.println("Sending message...");
+        ArrayList<String> incidencia = new ArrayList<String>();
+        incidencia.add(STRING_INCIDENCIA_MANTENIMIENTO);
+        String response = (String) template.convertSendAndReceive(directExchangeName, "rpc", incidencia);
+        System.out.println("Received in 'gateway/Sender' <" + response + ">");
+        return response;
+    }
+
+    @PostMapping(value = STRING_INCIDENCIA_ADMIN)
+    public String publishUserDetails(@RequestParam("idIncidencia") String idIncidencia,
+     @RequestParam("aceptar") String aceptar, @RequestParam("idEmpleado") String idEmpleado,
+     @RequestParam("prioridad") String prioridad) {
+        System.out.println("Sending message...");
+        ArrayList<String> incidencia = new ArrayList<String>();
+        incidencia.add(STRING_INCIDENCIA_ADMIN);
+        incidencia.add(idIncidencia); incidencia.add(aceptar); incidencia.add(idEmpleado); incidencia.add(prioridad);
+
+        String response = (String) template.convertSendAndReceive(directExchangeName, "rpc", incidencia);
+        System.out.println("Received in 'gateway/Sender' <" + response + ">");
+        return response;
+    }
+
+    @GetMapping(value = STRING_MANTENIMIENTO)
+    public String publishUserDetails() {
+        System.out.println("Sending message...");
+        ArrayList<String> mantenimiento = new ArrayList<String>();
+        mantenimiento.add(STRING_MANTENIMIENTO);
+        String response = (String) template.convertSendAndReceive(directExchangeName, "rpc", mantenimiento);
+        System.out.println("Received in 'gateway/Sender' <" + response + ">");
+        return response;
+    }
+
+    @GetMapping(value = STRING_ESPACIOS)
+    public String publishUserDetails(@RequestParam("aforoMinimo") String aforoMinimo, @RequestParam("proyector") String proyector,
+     @RequestParam("edificio") String edificio, @RequestParam("planta") String planta,
+     @RequestParam("tipoSala") String tipoSala,@RequestParam("fechaInicio") String fechaInicio, 
+     @RequestParam("fechaFin") String fechaFin, @RequestParam("horaInicio") String horaInicio, 
+     @RequestParam("horaFin") String horaFin) {
+        System.out.println("Sending message...");
+        ArrayList<String> espacio = new ArrayList<String>();
+        espacio.add(STRING_ESPACIOS);
+        espacio.add(aforoMinimo); espacio.add(proyector); espacio.add(edificio); espacio.add(planta);
+        espacio.add(tipoSala); espacio.add(fechaInicio); espacio.add(fechaFin); espacio.add(horaInicio);
+        espacio.add(horaFin);
+
+        String response = (String) template.convertSendAndReceive(directExchangeName, "rpc", espacio);
+        System.out.println("Received in 'gateway/Sender' <" + response + ">");
+        return response;
+    }
+
+    @PostMapping(value = STRING_ESPACIO)
+    public String publishUserDetails( @RequestParam("idSala") String idSala, @RequestParam("nombreUsuario") String nombreUsuario,
+     @RequestParam("fechaInicio") String fechaInicio, @RequestParam("fechaFin") String fechaFin,
+     @RequestParam("horaInicio") String horaInicio, @RequestParam("horaFin") String horaFin
+     @RequestParam("semanal") String semanal, @RequestParam("email") String email,
+     @RequestParam("telefono") String telefono) {
+        System.out.println("Sending message...");
+        ArrayList<String> reserva = new ArrayList<String>();
+        reserva.add(STRING_ESPACIO);
+        reserva.add(idSala); reserva.add(nombreUsuario); reserva.add(fechaInicio); reserva.add(fechaFin); 
+        reserva.add(horaInicio); reserva.add(semanal); reserva.add(email); reserva.add(telefono);
+        
+        String response = (String) template.convertSendAndReceive(directExchangeName, "rpc", reserva);
+        System.out.println("Received in 'gateway/Sender' <" + response + ">");
+        return response;
+    }
+
+    @GetMapping(value = STRING_ESPACIO)
+    public String publishUserDetails(@RequestParam("idSala") String idSala,) {
+        System.out.println("Sending message...");
+        ArrayList<String> espacio = new ArrayList<String>();
+        espacio.add(STRING_ESPACIO); espacio.add(idSala); //TODO revisar
+
+        String response = (String) template.convertSendAndReceive(directExchangeName, "rpc", espacio);
+        System.out.println("Received in 'gateway/Sender' <" + response + ">");
+        return response;
+    }
+
+    @PostMapping(value = STRING_AFORO)
+    public String publishUserDetails() {
+        System.out.println("Sending message...");
+        ArrayList<String> aforo = new ArrayList<String>();
+        aforo.add(STRING_AFORO);
+        
+        String response = (String) template.convertSendAndReceive(directExchangeName, "rpc", aforo);
         System.out.println("Received in 'gateway/Sender' <" + response + ">");
         return response;
     }
