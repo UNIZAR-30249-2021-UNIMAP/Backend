@@ -25,20 +25,26 @@ public class PersonalMantenimiento extends Persona {
         this.tareasNormales = new ArrayList<Incidencia>();
         this.tareasUrgentes = new ArrayList<Incidencia>();
         this.maxNumTareasNormales = 5;
-        this.maxNumTareasUrgentes = 2;
+        this.maxNumTareasUrgentes = 1;
     }
 
-    public void anyadirTareaNormal(Incidencia nuevaIncidencia) {
+    public boolean anyadirTareaNormal(Incidencia nuevaIncidencia) {
         if (nuevaIncidencia.getEstado().equals(Priority.NORMAL.toString())
                 && this.tareasNormales.size() < this.maxNumTareasNormales) {
             this.tareasNormales.add(nuevaIncidencia);
+            return true;
+        } else {
+            return false;
         }
     }
 
-    public void anyadirTareaUrgente(Incidencia nuevaIncidencia){
+    public boolean anyadirTareaUrgente(Incidencia nuevaIncidencia){
         if (nuevaIncidencia.getEstado().equals(Priority.URGENTE.toString())
                 && this.tareasNormales.size() < this.maxNumTareasUrgentes) {
             this.tareasNormales.add(nuevaIncidencia);
+            return true;
+        } else  {
+            return false;
         }
     }
 
