@@ -6,24 +6,26 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "idPersonalMantenimiento")
 public class PersonalMantenimiento extends Persona {
 
     @OneToMany(mappedBy = "incidencia_idPersonalMantenimiento")
-    ArrayList<Incidencia> tareasNormales;
+    private Set<Incidencia> tareasNormales;
 
     @OneToMany(mappedBy = "incidencia_idPersonalMantenimiento")
-    ArrayList<Incidencia> tareasUrgentes;
+    private Set<Incidencia> tareasUrgentes;
 
     Integer maxNumTareasNormales;
 
     Integer maxNumTareasUrgentes;
 
     public PersonalMantenimiento() {
-        this.tareasNormales = new ArrayList<Incidencia>();
-        this.tareasUrgentes = new ArrayList<Incidencia>();
+        this.tareasNormales = new HashSet<Incidencia>();
+        this.tareasUrgentes = new HashSet<Incidencia>();
         this.maxNumTareasNormales = 5;
         this.maxNumTareasUrgentes = 1;
     }
