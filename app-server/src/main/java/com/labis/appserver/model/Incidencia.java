@@ -3,6 +3,7 @@ package com.labis.appserver.model;
 import com.labis.appserver.common.IssueStatus;
 import com.labis.appserver.common.Priority;
 
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -17,7 +18,7 @@ public class Incidencia {
     //@OneToMany()
     private Long idEspacio;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="personalMantenimiento_id")
     private PersonalMantenimiento idPersonalMantenimiento;
 

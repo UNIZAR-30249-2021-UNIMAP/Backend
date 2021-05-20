@@ -2,21 +2,23 @@ package com.labis.appserver.model;
 
 import com.labis.appserver.common.Priority;
 
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@PrimaryKeyJoinColumn(name = "idPersonalMantenimiento")
+@PrimaryKeyJoinColumn(name = "personalMantenimiento_id")
 public class PersonalMantenimiento extends Persona {
 
-    @OneToMany(mappedBy = "incidencia_idPersonalMantenimiento")
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long idPersonalMantenimiento;
+
+    @OneToMany(mappedBy = "idPersonalMantenimiento")
     private Set<Incidencia> tareasNormales;
 
-    @OneToMany(mappedBy = "incidencia_idPersonalMantenimiento")
+    @OneToMany(mappedBy = "idPersonalMantenimiento")
     private Set<Incidencia> tareasUrgentes;
 
     Integer maxNumTareasNormales;
