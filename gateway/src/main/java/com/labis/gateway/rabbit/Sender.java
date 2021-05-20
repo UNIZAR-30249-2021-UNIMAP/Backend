@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import static com.labis.gateway.common.Constantes.*;
 
 @RestController
+@CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
 public class Sender {
 
     @Autowired
@@ -17,8 +18,8 @@ public class Sender {
     static final String directExchangeName = "tut.rpc";
 
     @PostMapping(value = STRING_LOGIN)
-    public String login(@RequestParam("email") String email, @RequestParam("contrasena") String contrasena) {
-        System.out.println("Sending message...");
+    public String login(@RequestParam(value="email") String email, @RequestParam(value="contrasena") String contrasena) {
+        System.out.println("Values: " +email +" " +contrasena);
         ArrayList<String> infoUser = new ArrayList<String>();
         infoUser.add(STRING_LOGIN);
         infoUser.add(email);
