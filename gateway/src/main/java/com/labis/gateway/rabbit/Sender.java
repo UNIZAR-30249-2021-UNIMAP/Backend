@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import static com.labis.gateway.common.Constantes.*;
 
 @RestController
-@RequestMapping(value="/api/v1/")  // Quitar
 public class Sender {
 
     @Autowired
@@ -18,7 +17,7 @@ public class Sender {
     static final String directExchangeName = "tut.rpc";
 
     @PostMapping(value = STRING_LOGIN)
-    public String publishUserDetails(@RequestParam("email") String email, @RequestParam("contrasena") String contrasena) {
+    public String login(@RequestParam("email") String email, @RequestParam("contrasena") String contrasena) {
         System.out.println("Sending message...");
         ArrayList<String> infoUser = new ArrayList<String>();
         infoUser.add(STRING_LOGIN);
@@ -29,8 +28,8 @@ public class Sender {
         return response;
     }
 
-    PostMapping(value = STRING_REGISTRO)
-    public String publishUserDetails(@RequestParam("nombreUsuario") String nombre,
+    @PostMapping(value = STRING_REGISTRO)
+    public String registro(@RequestParam("nombreUsuario") String nombre,
      @RequestParam("email") String email, @RequestParam("contrasena") String contrasena) {
         System.out.println("Sending message...");
         ArrayList<String> infoUser = new ArrayList<String>();
@@ -44,7 +43,7 @@ public class Sender {
     }
 
     @GetMapping(value = STRING_INCIDENCIA)
-    public String publishUserDetails() {
+    public String getIncidencias() {
         System.out.println("Sending message...");
         ArrayList<String> incidencia = new ArrayList<String>();
         incidencia.add(STRING_INCIDENCIA);
@@ -54,7 +53,7 @@ public class Sender {
     }
 
     @PostMapping(value = STRING_INCIDENCIA_MANTENIMIENTO)
-    public String publishUserDetails(@RequestParam("idIncidencia") String idIncidencia) {
+    public String finalizarIncidencia(@RequestParam("idIncidencia") String idIncidencia) {
         System.out.println("Sending message...");
         ArrayList<String> incidencia = new ArrayList<String>();
         incidencia.add(STRING_INCIDENCIA_MANTENIMIENTO);
@@ -65,7 +64,7 @@ public class Sender {
     }
 
     @GetMapping(value = STRING_INCIDENCIA_MANTENIMIENTO)
-    public String publishUserDetails() {
+    public String getIncidenciasMantenimiento() {
         System.out.println("Sending message...");
         ArrayList<String> incidencia = new ArrayList<String>();
         incidencia.add(STRING_INCIDENCIA_MANTENIMIENTO);
@@ -75,7 +74,7 @@ public class Sender {
     }
 
     @PostMapping(value = STRING_INCIDENCIA_ADMIN)
-    public String publishUserDetails(@RequestParam("idIncidencia") String idIncidencia,
+    public String asignarRechazarIncidencia(@RequestParam("idIncidencia") String idIncidencia,
      @RequestParam("aceptar") String aceptar, @RequestParam("idEmpleado") String idEmpleado,
      @RequestParam("prioridad") String prioridad) {
         System.out.println("Sending message...");
@@ -89,7 +88,7 @@ public class Sender {
     }
 
     @GetMapping(value = STRING_MANTENIMIENTO)
-    public String publishUserDetails() {
+    public String getEmpleados() {
         System.out.println("Sending message...");
         ArrayList<String> mantenimiento = new ArrayList<String>();
         mantenimiento.add(STRING_MANTENIMIENTO);
@@ -99,7 +98,7 @@ public class Sender {
     }
 
     @GetMapping(value = STRING_ESPACIOS)
-    public String publishUserDetails(@RequestParam("aforoMinimo") String aforoMinimo, @RequestParam("proyector") String proyector,
+    public String getEspaciosParametrizados(@RequestParam("aforoMinimo") String aforoMinimo, @RequestParam("proyector") String proyector,
      @RequestParam("edificio") String edificio, @RequestParam("planta") String planta,
      @RequestParam("tipoSala") String tipoSala,@RequestParam("fechaInicio") String fechaInicio, 
      @RequestParam("fechaFin") String fechaFin, @RequestParam("horaInicio") String horaInicio, 
@@ -117,9 +116,9 @@ public class Sender {
     }
 
     @PostMapping(value = STRING_ESPACIO)
-    public String publishUserDetails( @RequestParam("idSala") String idSala, @RequestParam("nombreUsuario") String nombreUsuario,
+    public String reservaEspacio( @RequestParam("idSala") String idSala, @RequestParam("nombreUsuario") String nombreUsuario,
      @RequestParam("fechaInicio") String fechaInicio, @RequestParam("fechaFin") String fechaFin,
-     @RequestParam("horaInicio") String horaInicio, @RequestParam("horaFin") String horaFin
+     @RequestParam("horaInicio") String horaInicio, @RequestParam("horaFin") String horaFin,
      @RequestParam("semanal") String semanal, @RequestParam("email") String email,
      @RequestParam("telefono") String telefono) {
         System.out.println("Sending message...");
@@ -134,7 +133,7 @@ public class Sender {
     }
 
     @GetMapping(value = STRING_ESPACIO)
-    public String publishUserDetails(@RequestParam("idSala") String idSala,) {
+    public String getInfoEspacio(@RequestParam("idSala") String idSala) {
         System.out.println("Sending message...");
         ArrayList<String> espacio = new ArrayList<String>();
         espacio.add(STRING_ESPACIO); espacio.add(idSala); //TODO revisar
@@ -145,7 +144,7 @@ public class Sender {
     }
 
     @PostMapping(value = STRING_AFORO)
-    public String publishUserDetails() {
+    public String setAforo() {
         System.out.println("Sending message...");
         ArrayList<String> aforo = new ArrayList<String>();
         aforo.add(STRING_AFORO);
