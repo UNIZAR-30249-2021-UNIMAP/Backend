@@ -50,7 +50,8 @@ public class Incidencia {
         this.asignadoTimeStamp = Timestamp.from(Instant.now());
     }
 
-    public void asignarPrioridadUrgente() {
+    public void asignarPrioridadUrgente(PersonalMantenimiento personalMantenimiento) {
+        this.personalMantenimiento = personalMantenimiento;
         this.estado = IssueStatus.PENDIENTE.toString();
         this.prioridad = Priority.URGENTE.toString();
         this.asignadoTimeStamp = Timestamp.from(Instant.now());
