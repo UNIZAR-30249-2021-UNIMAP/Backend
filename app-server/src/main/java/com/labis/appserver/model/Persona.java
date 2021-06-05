@@ -7,22 +7,34 @@ import javax.persistence.*;
 public class Persona {
 
     @Id
-    @GeneratedValue()
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String correo;
-
     private String nombre;
-
     private String apellidos;
 
-    public Persona(){
+    public Persona() {}
 
+    public Persona(String correo, String nombre, String apellidos) {
+        this.correo = correo;
+        this.nombre = nombre;
+        this.apellidos = apellidos;
     }
 
-    public Persona(String inCorreo, String inNombre, String inApellidos) {
-        this.correo = inCorreo;
-        this.nombre = inNombre;
-        this.apellidos = inApellidos;
+    public Long getId() {
+        return id;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public String getApellidos() {
+        return apellidos;
     }
 }

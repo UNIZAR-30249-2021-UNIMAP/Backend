@@ -1,7 +1,7 @@
 package com.labis.appserver.service;
 
 import com.labis.appserver.AppServerApplication;
-import com.labis.appserver.model.Incidencia;
+import com.labis.appserver.valueObject.Incidencia;
 import com.labis.appserver.repository.IncidenciaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
