@@ -1,5 +1,9 @@
 package com.labis.appserver.rabbit;
 
+import com.labis.appserver.model.PersonalMantenimiento;
+import com.labis.appserver.repository.IncidenciaRepository;
+import com.labis.appserver.service.IncidenciaService;
+import com.labis.appserver.valueObject.Incidencia;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,6 +16,9 @@ public class Receiver {
 
     @Autowired
     private JdbcTemplate jdbc;
+
+    @Autowired
+    IncidenciaService incidenciaService;
 
     @RabbitListener(queues = "tut.rpc.requests")
     public String receiveMessage(ArrayList<String> message) {
@@ -33,6 +40,16 @@ public class Receiver {
                 return "incidencia mantenimiento";
 
             case STRING_INCIDENCIA_ADMIN:
+                System.out.println("dentro de incidencia admin");
+
+                incidenciaService.Test();
+//                Incidencia incidencia = new Incidencia((long) 123);
+//
+//                PersonalMantenimiento personalMantenimiento = new PersonalMantenimiento("x@x.x", "pepe", "palotes");
+//                System.out.println(personalMantenimiento.anyadirIncidenciaNormal(incidencia));
+//                System.out.println("estado incidencia: " + incidencia.getEstado());
+//                System.out.println("timestamp creado + asignado: " + incidencia.getReportadoTimeStamp() + "-----" + incidencia.getAsignadoTimeStamp());
+//                System.out.println("personalMantenimiento: " + incidencia.getPersonalMantenimiento());
                 return "Incidencia admin";
 
             case STRING_MANTENIMIENTO:

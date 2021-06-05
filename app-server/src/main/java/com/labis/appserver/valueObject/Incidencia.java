@@ -27,7 +27,10 @@ public class Incidencia {
     private Timestamp asignadoTimeStamp;
     private Timestamp finalizadoTimeStamp;
 
-    public Incidencia() {}
+    public Incidencia() {
+        this.estado = IssueStatus.REPORTADO.toString();
+        this.reportadoTimeStamp = Timestamp.from(Instant.now());
+    }
 
     public Incidencia(Long idEspacio){
         this.estado = IssueStatus.REPORTADO.toString();
@@ -40,7 +43,8 @@ public class Incidencia {
         this.motivoRechazo = motivo;
     }
 
-    public void asignarPrioridadNormal() {
+    public void asignarPrioridadNormal(PersonalMantenimiento personalMantenimiento) {
+        this.personalMantenimiento = personalMantenimiento;
         this.estado = IssueStatus.PENDIENTE.toString();
         this.prioridad = Priority.NORMAL.toString();
         this.asignadoTimeStamp = Timestamp.from(Instant.now());
@@ -58,6 +62,9 @@ public class Incidencia {
     }
 
 
+    public Long getId() {
+        return id;
+    }
 
     public String getEstado() {
         return this.estado;
@@ -81,5 +88,9 @@ public class Incidencia {
 
     public Timestamp getFinalizadoTimeStamp() {
         return finalizadoTimeStamp;
+    }
+
+    public PersonalMantenimiento getPersonalMantenimiento() {
+        return personalMantenimiento;
     }
 }

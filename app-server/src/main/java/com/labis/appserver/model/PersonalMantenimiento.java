@@ -1,5 +1,6 @@
 package com.labis.appserver.model;
 
+import com.labis.appserver.common.IssueStatus;
 import com.labis.appserver.common.Priority;
 import com.labis.appserver.valueObject.Incidencia;
 
@@ -29,20 +30,20 @@ public class PersonalMantenimiento extends Persona {
         this.maxNumTareasUrgentes = 1;
     }
 
-    public boolean anyadirTareaNormal(Incidencia incidencia) {
-        if (incidencia.getEstado().equals(Priority.NORMAL.toString())
+    public boolean anyadirIncidenciaNormal(Incidencia incidencia) {
+        if (incidencia.getEstado().equals(IssueStatus.REPORTADO.toString())
                 && this.tareasNormales.size() < this.maxNumTareasNormales) {
 
             this.tareasNormales.add(incidencia);
-            incidencia.asignarPrioridadNormal();
+            incidencia.asignarPrioridadNormal(this);
             return true;
         } else {
             return false;
         }
     }
 
-    public boolean anyadirTareaUrgente(Incidencia incidencia){
-        if (incidencia.getEstado().equals(Priority.URGENTE.toString())
+    public boolean anyadirIncidenciaUrgente(Incidencia incidencia){
+        if (incidencia.getEstado().equals(IssueStatus.REPORTADO.toString())
                 && this.tareasUrgentes.size() < this.maxNumTareasUrgentes) {
 
             this.tareasUrgentes.add(incidencia);
