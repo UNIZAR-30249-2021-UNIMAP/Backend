@@ -1,7 +1,7 @@
 package com.labis.appserver.valueObject;
 
+import com.labis.appserver.common.Constantes;
 import com.labis.appserver.common.IssueStatus;
-import com.labis.appserver.common.Priority;
 import com.labis.appserver.model.PersonalMantenimiento;
 
 
@@ -46,14 +46,14 @@ public class Incidencia {
     public void asignarPrioridadNormal(PersonalMantenimiento personalMantenimiento) {
         this.personalMantenimiento = personalMantenimiento;
         this.estado = IssueStatus.PENDIENTE.toString();
-        this.prioridad = Priority.NORMAL.toString();
+        this.prioridad = Constantes.STRING_PRIORIDAD_NORMAL;
         this.asignadoTimeStamp = Timestamp.from(Instant.now());
     }
 
     public void asignarPrioridadUrgente(PersonalMantenimiento personalMantenimiento) {
         this.personalMantenimiento = personalMantenimiento;
         this.estado = IssueStatus.PENDIENTE.toString();
-        this.prioridad = Priority.URGENTE.toString();
+        this.prioridad = Constantes.STRING_PRIORIDAD_URGENTE;
         this.asignadoTimeStamp = Timestamp.from(Instant.now());
     }
 
