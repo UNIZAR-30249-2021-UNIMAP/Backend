@@ -13,8 +13,8 @@ public class Constantes {
     public static final String STRING_ESPACIOS = "/espacios"; // Get: lista de espacios parametrizada
 
     //Strings de prioridad de una incidencia
-    public static final String STRING_PRIORIDAD_NORMAL =  "normal";
-    public static final String STRING_PRIORIDAD_URGENTE =  "urgente";
+    public static final String STRING_PRIORIDAD_NORMAL =  "NORMAL";
+    public static final String STRING_PRIORIDAD_URGENTE =  "URGENTE";
 
     //Strings de tipo de código que puede devolver una petición al cliente
     public static final String STRING_STATUS_OK = "OK";
