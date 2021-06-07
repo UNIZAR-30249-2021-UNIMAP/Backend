@@ -1,9 +1,6 @@
 package com.labis.appserver.rabbit;
 
-import com.labis.appserver.model.PersonalMantenimiento;
-import com.labis.appserver.repository.IncidenciaRepository;
 import com.labis.appserver.service.IncidenciaService;
-import com.labis.appserver.valueObject.Incidencia;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -24,8 +21,7 @@ public class Receiver {
     public String receiveMessage(ArrayList<String> message) {
         System.out.println("Received in 'appserver/Receiver' <" + message + ">");
 
-        String guarda = message.get(0);
-        message.remove(0);
+        String guarda = message.remove(0);
         switch (guarda) {
             case STRING_LOGIN:
                 return "login";
@@ -40,17 +36,18 @@ public class Receiver {
                 return "incidencia mantenimiento";
 
             case STRING_INCIDENCIA_ADMIN:
-                System.out.println("dentro de incidencia admin");
+                long idIncidencia = Long.parseLong(message.remove(0));
+                boolean aceptar = Boolean.parseBoolean(message.remove(0));
+                long idEmpleado = Long.parseLong(message.remove(0));
+                String prioridad = message.remove(0);
 
-                incidenciaService.Test();
-//                Incidencia incidencia = new Incidencia((long) 123);
-//
-//                PersonalMantenimiento personalMantenimiento = new PersonalMantenimiento("x@x.x", "pepe", "palotes");
-//                System.out.println(personalMantenimiento.anyadirIncidenciaNormal(incidencia));
-//                System.out.println("estado incidencia: " + incidencia.getEstado());
-//                System.out.println("timestamp creado + asignado: " + incidencia.getReportadoTimeStamp() + "-----" + incidencia.getAsignadoTimeStamp());
-//                System.out.println("personalMantenimiento: " + incidencia.getPersonalMantenimiento());
-                return "Incidencia admin";
+                boolean resultado = incidenciaService.aceptarORechazarIncidencia(idIncidencia, aceptar, idEmpleado, prioridad);
+
+                if (resultado) {
+                    return STRING_STATUS_OK;
+                } else {
+                    return STRING_STATUS_ERROR;
+                }
 
             case STRING_MANTENIMIENTO:
                 return "Mantenimiento";

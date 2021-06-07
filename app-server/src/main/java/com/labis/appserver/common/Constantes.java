@@ -1,6 +1,7 @@
 package com.labis.appserver.common;
 
 public class Constantes {
+    //Strings de tipo de petición a la API
     public static final String STRING_LOGIN = "/login";
     public static final String STRING_INCIDENCIA = "/incidencia"; // Get: Todas las incidencias
     public static final String STRING_REGISTRO = "/registro";
@@ -11,6 +12,11 @@ public class Constantes {
     public static final String STRING_AFORO = "/aforo"; // Get: lista de espacios y su aforo Post: aforo o regla de aforo
     public static final String STRING_ESPACIOS = "/espacios"; // Get: lista de espacios parametrizada
 
+    //Strings de prioridad de una incidencia
     public static final String STRING_PRIORIDAD_NORMAL =  "normal";
     public static final String STRING_PRIORIDAD_URGENTE =  "urgente";
+
+    //Strings de tipo de código que puede devolver una petición al cliente
+    public static final String STRING_STATUS_OK = "OK";
+    public static final String STRING_STATUS_ERROR = "OK";
 }
