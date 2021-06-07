@@ -39,32 +39,37 @@ public class IncidenciaService {
 
     public boolean aceptarORechazarIncidencia(long idIncidencia, boolean aceptar, long idEmpleado, 
                                               String prioridad, String motivo) {
+        boolean resultado = false;
         Optional<Incidencia> incidencia = repository.findById(idIncidencia);
         if (incidencia.isPresent()) {
             if (aceptar) {
-                aceptarIncidencia(incidencia.get(), idEmpleado, prioridad);
+                resultado = aceptarIncidencia(incidencia.get(), idEmpleado, prioridad);
             } else {
-                rechazarIncidencia(incidencia.get(), motivo);
+                resultado = rechazarIncidencia(incidencia.get(), motivo);
             } 
-        } else {
-            return false;
         }
-        return true;
+
+        return resultado;
     }
 
     private void rechazarIncidencia(Incidencia incidencia, String motivo) {
 
     }
 
-    private void aceptarIncidencia(Incidencia incidencia, long idEmpleado, String prioridad) {
+    private boolean aceptarIncidencia(Incidencia incidencia, long idEmpleado, String prioridad) {
+        boolean resultado = false;
         PersonalMantenimiento personalMantenimiento = personalMantenimientoService.findById(idEmpleado);
         if (prioridad.equals(STRING_PRIORIDAD_NORMAL)) {
-            personalMantenimiento.anyadirIncidenciaNormal(incidencia);
+            resultado = personalMantenimiento.anyadirIncidenciaNormal(incidencia);
         } else {
-            personalMantenimiento.anyadirIncidenciaUrgente(incidencia);
+            resultado = personalMantenimiento.anyadirIncidenciaUrgente(incidencia);
         }
-        repository.save(incidencia);
-        personalMantenimientoRepository.save(personalMantenimiento);
+
+        if (resultado) {
+            repository.save(incidencia);
+            personalMantenimientoRepository.save(personalMantenimiento);
+        }
+        return resultado;
     }
 
     public void Test() {
