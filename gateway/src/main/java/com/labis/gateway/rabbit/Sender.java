@@ -77,11 +77,12 @@ public class Sender {
     @PostMapping(value = STRING_INCIDENCIA_ADMIN)
     public String asignarRechazarIncidencia(@RequestParam("idIncidencia") String idIncidencia,
      @RequestParam("aceptar") String aceptar, @RequestParam("idEmpleado") String idEmpleado,
-     @RequestParam("prioridad") String prioridad) {
+     @RequestParam("prioridad") String prioridad, @RequestParam("motivo") String motivo) {
         System.out.println("Sending message...");
         ArrayList<String> incidencia = new ArrayList<String>();
         incidencia.add(STRING_INCIDENCIA_ADMIN);
         incidencia.add(idIncidencia); incidencia.add(aceptar); incidencia.add(idEmpleado); incidencia.add(prioridad);
+        incidencia.add(motivo);
 
         String response = (String) template.convertSendAndReceive(directExchangeName, "rpc", incidencia);
         System.out.println("Received in 'gateway/Sender' <" + response + ">");

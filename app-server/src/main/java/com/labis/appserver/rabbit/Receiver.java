@@ -40,8 +40,10 @@ public class Receiver {
                 boolean aceptar = Boolean.parseBoolean(message.remove(0));
                 long idEmpleado = Long.parseLong(message.remove(0));
                 String prioridad = message.remove(0);
+                String motivo = message.remove(0);
 
-                boolean resultado = incidenciaService.aceptarORechazarIncidencia(idIncidencia, aceptar, idEmpleado, prioridad);
+                boolean resultado = incidenciaService.aceptarORechazarIncidencia(idIncidencia, aceptar,
+                        idEmpleado, prioridad, motivo);
 
                 if (resultado) {
                     return STRING_STATUS_OK;

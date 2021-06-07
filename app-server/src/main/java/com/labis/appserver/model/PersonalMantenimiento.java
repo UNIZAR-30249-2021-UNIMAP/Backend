@@ -1,7 +1,6 @@
 package com.labis.appserver.model;
 
 import com.labis.appserver.common.IssueStatus;
-import com.labis.appserver.common.Priority;
 import com.labis.appserver.valueObject.Incidencia;
 
 import javax.persistence.*;
@@ -47,7 +46,7 @@ public class PersonalMantenimiento extends Persona {
                 && this.tareasUrgentes.size() < this.maxNumTareasUrgentes) {
 
             this.tareasUrgentes.add(incidencia);
-            incidencia.asignarPrioridadUrgente();
+            incidencia.asignarPrioridadUrgente(this);
             return true;
         } else  {
             return false;
