@@ -6,6 +6,7 @@ import com.labis.appserver.model.PersonalMantenimiento;
 import com.labis.appserver.repository.PersonalMantenimientoRepository;
 import com.labis.appserver.valueObject.Incidencia;
 import com.labis.appserver.repository.IncidenciaRepository;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,15 +50,17 @@ public class IncidenciaService {
             } 
         }
 
+        log.info("Resultado aceptarORechazar: " + resultado);
         return resultado;
     }
 
-    private void rechazarIncidencia(Incidencia incidencia, String motivo) {
+    private boolean rechazarIncidencia(Incidencia incidencia, String motivo) {
 
+        return true;
     }
 
     private boolean aceptarIncidencia(Incidencia incidencia, long idEmpleado, String prioridad) {
-        boolean resultado = false;
+        boolean resultado;
         PersonalMantenimiento personalMantenimiento = personalMantenimientoService.findById(idEmpleado);
         if (prioridad.equals(STRING_PRIORIDAD_NORMAL)) {
             resultado = personalMantenimiento.anyadirIncidenciaNormal(incidencia);
@@ -69,6 +72,7 @@ public class IncidenciaService {
             repository.save(incidencia);
             personalMantenimientoRepository.save(personalMantenimiento);
         }
+        log.info("Resultado: " + resultado);
         return resultado;
     }
 

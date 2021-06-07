@@ -1,7 +1,11 @@
 package com.labis.appserver.model;
 
+import com.labis.appserver.AppServerApplication;
 import com.labis.appserver.common.IssueStatus;
 import com.labis.appserver.valueObject.Incidencia;
+import org.hibernate.Hibernate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -9,11 +13,12 @@ import java.util.Set;
 
 @Entity
 public class PersonalMantenimiento extends Persona {
+    private static final Logger log = LoggerFactory.getLogger(AppServerApplication.class);
 
-    @OneToMany(mappedBy = "personalMantenimiento")
+    @OneToMany(mappedBy = "personalMantenimiento", fetch = FetchType.EAGER)
     private Set<Incidencia> tareasNormales;
 
-    @OneToMany(mappedBy = "personalMantenimiento")
+    @OneToMany(mappedBy = "personalMantenimiento", fetch = FetchType.EAGER)
     private Set<Incidencia> tareasUrgentes;
 
     Integer maxNumTareasNormales;
@@ -30,6 +35,8 @@ public class PersonalMantenimiento extends Persona {
     }
 
     public boolean anyadirIncidenciaNormal(Incidencia incidencia) {
+        log.info("tamaño tareas normales: " + this.tareasNormales.size());
+
         if (incidencia.getEstado().equals(IssueStatus.REPORTADO.toString())
                 && this.tareasNormales.size() < this.maxNumTareasNormales) {
 
@@ -42,6 +49,7 @@ public class PersonalMantenimiento extends Persona {
     }
 
     public boolean anyadirIncidenciaUrgente(Incidencia incidencia){
+        log.info("tamaño tareas urgentes: " + this.tareasUrgentes.size());
         if (incidencia.getEstado().equals(IssueStatus.REPORTADO.toString())
                 && this.tareasUrgentes.size() < this.maxNumTareasUrgentes) {
 

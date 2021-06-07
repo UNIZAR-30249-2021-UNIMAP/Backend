@@ -1,6 +1,9 @@
 package com.labis.appserver.rabbit;
 
+import com.labis.appserver.AppServerApplication;
 import com.labis.appserver.service.IncidenciaService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,6 +13,7 @@ import java.util.ArrayList;
 import static com.labis.appserver.common.Constantes.*;
 
 public class Receiver {
+    private static final Logger log = LoggerFactory.getLogger(AppServerApplication.class);
 
     @Autowired
     private JdbcTemplate jdbc;
@@ -45,6 +49,7 @@ public class Receiver {
                 boolean resultado = incidenciaService.aceptarORechazarIncidencia(idIncidencia, aceptar,
                         idEmpleado, prioridad, motivo);
 
+                log.info("Resultado final:" + resultado);
                 if (resultado) {
                     return STRING_STATUS_OK;
                 } else {
