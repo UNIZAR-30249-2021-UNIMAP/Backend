@@ -1,4 +1,4 @@
-package com.labis.appserver.common;
+package com.labis.gateway.common;
 
 public class Constantes {
     //Strings de tipo de petición a la API
