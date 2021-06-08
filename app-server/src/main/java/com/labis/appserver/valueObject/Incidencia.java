@@ -43,6 +43,7 @@ public class Incidencia {
 
     public void rechazar(String motivo) {
         this.estado = IssueStatus.RECHAZADA.toString();
+        this.finalizadoTimeStamp = Timestamp.from(Instant.now());
         this.motivoRechazo = motivo;
     }
 

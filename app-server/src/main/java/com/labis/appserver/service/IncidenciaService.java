@@ -2,6 +2,7 @@ package com.labis.appserver.service;
 
 import com.labis.appserver.AppServerApplication;
 import com.labis.appserver.common.IssueStatus;
+import com.labis.appserver.model.Persona;
 import com.labis.appserver.model.PersonalMantenimiento;
 import com.labis.appserver.repository.PersonalMantenimientoRepository;
 import com.labis.appserver.valueObject.Incidencia;
@@ -41,13 +42,17 @@ public class IncidenciaService {
     public boolean aceptarORechazarIncidencia(long idIncidencia, boolean aceptar, long idEmpleado, 
                                               String prioridad, String motivo) {
         boolean resultado = false;
-        Optional<Incidencia> incidencia = repository.findById(idIncidencia);
-        if (incidencia.isPresent()) {
+        Optional<Incidencia> incidenciaOptional = repository.findById(idIncidencia);
+        if (incidenciaOptional.isPresent()) {
+            Incidencia incidencia = incidenciaOptional.get();
             if (aceptar) {
-                resultado = aceptarIncidencia(incidencia.get(), idEmpleado, prioridad);
+                PersonalMantenimiento personalMantenimiento = personalMantenimientoService.findById(idEmpleado);
+                resultado = aceptarIncidencia(incidencia, personalMantenimiento, prioridad);
+                personalMantenimientoRepository.save(personalMantenimiento);
             } else {
-                resultado = rechazarIncidencia(incidencia.get(), motivo);
-            } 
+                resultado = rechazarIncidencia(incidencia, motivo);
+            }
+            repository.save(incidencia);
         }
 
         log.info("Resultado aceptarORechazar: " + resultado);
@@ -55,24 +60,18 @@ public class IncidenciaService {
     }
 
     private boolean rechazarIncidencia(Incidencia incidencia, String motivo) {
-
+        incidencia.rechazar(motivo);
         return true;
     }
 
-    private boolean aceptarIncidencia(Incidencia incidencia, long idEmpleado, String prioridad) {
+    private boolean aceptarIncidencia(Incidencia incidencia, PersonalMantenimiento personalMantenimiento, String prioridad) {
         boolean resultado;
-        PersonalMantenimiento personalMantenimiento = personalMantenimientoService.findById(idEmpleado);
         if (prioridad.equals(STRING_PRIORIDAD_NORMAL)) {
             resultado = personalMantenimiento.anyadirIncidenciaNormal(incidencia);
         } else {
             resultado = personalMantenimiento.anyadirIncidenciaUrgente(incidencia);
         }
-
-        if (resultado) {
-            repository.save(incidencia);
-            personalMantenimientoRepository.save(personalMantenimiento);
-        }
-        log.info("Resultado: " + resultado);
+        
         return resultado;
     }
 
