@@ -3,7 +3,6 @@ package com.labis.appserver.model;
 import com.labis.appserver.AppServerApplication;
 import com.labis.appserver.common.IssueStatus;
 import com.labis.appserver.valueObject.Incidencia;
-import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,10 +14,10 @@ import java.util.Set;
 public class PersonalMantenimiento extends Persona {
     private static final Logger log = LoggerFactory.getLogger(AppServerApplication.class);
 
-    @OneToMany(mappedBy = "personalMantenimiento", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "personalMantenimientoNormal", fetch = FetchType.EAGER)
     private Set<Incidencia> tareasNormales;
 
-    @OneToMany(mappedBy = "personalMantenimiento", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "personalMantenimientoUrgente", fetch = FetchType.EAGER)
     private Set<Incidencia> tareasUrgentes;
 
     Integer maxNumTareasNormales;

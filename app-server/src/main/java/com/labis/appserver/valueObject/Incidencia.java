@@ -17,7 +17,10 @@ public class Incidencia {
     private Long id;
 
     @ManyToOne
-    private PersonalMantenimiento personalMantenimiento;
+    private PersonalMantenimiento personalMantenimientoNormal;
+
+    @ManyToOne
+    private PersonalMantenimiento personalMantenimientoUrgente;
 
     private Long idEspacio;
     private String estado;
@@ -44,14 +47,14 @@ public class Incidencia {
     }
 
     public void asignarPrioridadNormal(PersonalMantenimiento personalMantenimiento) {
-        this.personalMantenimiento = personalMantenimiento;
+        this.personalMantenimientoNormal = personalMantenimiento;
         this.estado = IssueStatus.PENDIENTE.toString();
         this.prioridad = Constantes.STRING_PRIORIDAD_NORMAL;
         this.asignadoTimeStamp = Timestamp.from(Instant.now());
     }
 
     public void asignarPrioridadUrgente(PersonalMantenimiento personalMantenimiento) {
-        this.personalMantenimiento = personalMantenimiento;
+        this.personalMantenimientoUrgente = personalMantenimiento;
         this.estado = IssueStatus.PENDIENTE.toString();
         this.prioridad = Constantes.STRING_PRIORIDAD_URGENTE;
         this.asignadoTimeStamp = Timestamp.from(Instant.now());
@@ -91,7 +94,7 @@ public class Incidencia {
         return finalizadoTimeStamp;
     }
 
-    public PersonalMantenimiento getPersonalMantenimiento() {
-        return personalMantenimiento;
+    public PersonalMantenimiento getPersonalMantenimientoNormal() {
+        return personalMantenimientoNormal;
     }
 }
