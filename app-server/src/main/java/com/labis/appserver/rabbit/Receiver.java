@@ -44,7 +44,6 @@ public class Receiver {
                 boolean aceptar = Boolean.parseBoolean(message.remove(0));
                 long idEmpleado = 0;
                 if (!message.get(0).equals("")) {
-                    log.info(String.valueOf("NO DEBERIA ESTAR AQUI <-----------." + message.get(0) + "."));
                     idEmpleado = Long.parseLong(message.remove(0));
                 } else {
                     message.remove(0); //Elimina el hueco nulo del array
