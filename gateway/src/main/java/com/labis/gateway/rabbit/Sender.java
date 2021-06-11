@@ -53,6 +53,19 @@ public class Sender {
         return response;
     }
 
+    @PostMapping(value = STRING_INCIDENCIA_REPORTE)
+    public String getIncidencias(@RequestParam("idEspacio") String idEspacio,
+                                 @RequestParam("descripcion") String descripcion, @RequestParam("email") String email,
+                                 @RequestParam("imagen") String imagen) {
+        System.out.println("Sending message...");
+        ArrayList<String> incidencia = new ArrayList<String>();
+        incidencia.add(STRING_INCIDENCIA_REPORTE);
+        incidencia.add(idEspacio); incidencia.add(descripcion); incidencia.add(email); incidencia.add(imagen);
+        String response = (String) template.convertSendAndReceive(directExchangeName, "rpc", incidencia);
+        System.out.println("Received in 'gateway/Sender' <" + response + ">");
+        return response;
+    }
+
     @PostMapping(value = STRING_INCIDENCIA_MANTENIMIENTO)
     public String finalizarIncidencia(@RequestParam("idIncidencia") String idIncidencia) {
         System.out.println("Sending message...");

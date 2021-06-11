@@ -33,6 +33,10 @@ public class Receiver {
             case STRING_INCIDENCIA:
                 return "incidencia";
 
+            case STRING_INCIDENCIA_REPORTE:
+
+                return "incidencia_reporte";
+
             case STRING_REGISTRO:
                 return "registro";
 
