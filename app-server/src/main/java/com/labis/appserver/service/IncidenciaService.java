@@ -2,12 +2,10 @@ package com.labis.appserver.service;
 
 import com.labis.appserver.AppServerApplication;
 import com.labis.appserver.common.IssueStatus;
-import com.labis.appserver.model.Persona;
 import com.labis.appserver.model.PersonalMantenimiento;
 import com.labis.appserver.repository.PersonalMantenimientoRepository;
 import com.labis.appserver.valueObject.Incidencia;
 import com.labis.appserver.repository.IncidenciaRepository;
-import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,25 +22,30 @@ public class IncidenciaService {
     @Autowired
     PersonalMantenimientoService personalMantenimientoService;
 
-    private final IncidenciaRepository repository;
+    private final IncidenciaRepository incidenciaRepository;
     private final PersonalMantenimientoRepository personalMantenimientoRepository;
 
     public IncidenciaService (IncidenciaRepository repository, PersonalMantenimientoRepository personalMantenimientoRepository){
-        this.repository = repository;
+        this.incidenciaRepository = repository;
         this.personalMantenimientoRepository = personalMantenimientoRepository;
     }
 
     private static final Logger log = LoggerFactory.getLogger(AppServerApplication.class);
 
     public List<Incidencia> findAll() {
-        List<Incidencia> incidencias = (List<Incidencia>) repository.findAll();
+        List<Incidencia> incidencias = (List<Incidencia>) incidenciaRepository.findAll();
         return incidencias;
+    }
+
+    public void reportarIncidencia(Long idEspacio, String descripcion, String email, String imagen) {
+        Incidencia incidencia = new Incidencia(idEspacio, descripcion, email, imagen);
+        incidenciaRepository.save(incidencia);
     }
 
     public boolean aceptarORechazarIncidencia(long idIncidencia, boolean aceptar, long idEmpleado, 
                                               String prioridad, String motivo) {
         boolean resultado = false;
-        Optional<Incidencia> incidenciaOptional = repository.findById(idIncidencia);
+        Optional<Incidencia> incidenciaOptional = incidenciaRepository.findById(idIncidencia);
         if (incidenciaOptional.isPresent()) {
             Incidencia incidencia = incidenciaOptional.get();
             if (aceptar) {
@@ -52,7 +55,7 @@ public class IncidenciaService {
             } else {
                 resultado = rechazarIncidencia(incidencia, motivo);
             }
-            repository.save(incidencia);
+            incidenciaRepository.save(incidencia);
         }
 
         log.info("Resultado aceptarORechazar: " + resultado);
@@ -80,19 +83,17 @@ public class IncidenciaService {
         PersonalMantenimiento personalMantenimiento = new PersonalMantenimiento("x@x.x", "pepe", "palotes");
         personalMantenimientoRepository.save(personalMantenimiento);
 
-        repository.save(prueba);
+        incidenciaRepository.save(prueba);
 
-        System.out.println("ESTADO pendiente: " + repository.findByEstado(IssueStatus.REPORTADO.toString()).iterator().next().getId());
-        System.out.println("ESTADO pendiente: " + repository.findByEstado(IssueStatus.REPORTADO.toString()).iterator().next().getPrioridad());
+        System.out.println("ESTADO pendiente: " + incidenciaRepository.findByEstado(IssueStatus.REPORTADO.toString()).iterator().next().getId());
+        System.out.println("ESTADO pendiente: " + incidenciaRepository.findByEstado(IssueStatus.REPORTADO.toString()).iterator().next().getPrioridad());
 
         personalMantenimiento.anyadirIncidenciaNormal(prueba);
 
         log.info("Funcion test ejecutando");
-        repository.save(prueba);
+        incidenciaRepository.save(prueba);
 
         personalMantenimientoRepository.save(personalMantenimiento);
-        System.out.println("ESTADO: " + repository.findByEstado(IssueStatus.PENDIENTE.toString()).iterator().next().getId());
+        System.out.println("ESTADO: " + incidenciaRepository.findByEstado(IssueStatus.PENDIENTE.toString()).iterator().next().getId());
     }
-
-
 }

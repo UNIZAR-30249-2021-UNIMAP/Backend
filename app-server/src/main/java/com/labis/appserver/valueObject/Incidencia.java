@@ -22,7 +22,13 @@ public class Incidencia {
     @ManyToOne
     private PersonalMantenimiento personalMantenimientoUrgente;
 
+    //Variables del reporte
     private Long idEspacio;
+    private String descripcion;
+    private String email;
+    private String imagen;
+
+    //Variables del estado de la incidencia
     private String estado;
     private String prioridad;
     private String motivoRechazo;
@@ -35,10 +41,13 @@ public class Incidencia {
         this.reportadoTimeStamp = Timestamp.from(Instant.now());
     }
 
-    public Incidencia(Long idEspacio){
+    public Incidencia(Long idEspacio, String descripcion, String email, String imagen){
         this.estado = IssueStatus.REPORTADO.toString();
         this.reportadoTimeStamp = Timestamp.from(Instant.now());
         this.idEspacio = idEspacio;
+        this.descripcion = descripcion;
+        this.email = email;
+        this.imagen = imagen;
     }
 
     public void rechazar(String motivo) {

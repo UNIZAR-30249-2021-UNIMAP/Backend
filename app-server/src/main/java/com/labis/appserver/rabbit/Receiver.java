@@ -33,6 +33,15 @@ public class Receiver {
             case STRING_INCIDENCIA:
                 return "incidencia";
 
+            case STRING_INCIDENCIA_REPORTE:
+                Long idEspacio = Long.parseLong(message.remove(0));
+                String descripcion = message.remove(0);
+                String email = message.remove(0);
+                String imagen = message.remove(0);
+                incidenciaService.reportarIncidencia(idEspacio, descripcion, email, imagen);
+
+                return STRING_STATUS_OK;
+
             case STRING_REGISTRO:
                 return "registro";
 
