@@ -3,7 +3,7 @@ package com.labis.gateway.common;
 public class Constantes {
     //Strings de tipo de petición a la API
     public static final String STRING_LOGIN = "/login";
-    public static final String STRING_INCIDENCIA = "/incidencia"; // Get: Todas las incidencias
+    public static final String STRING_INCIDENCIA = "/incidencia"; // Get: Todas las incidencias Post: Crear incidencia
     public static final String STRING_REGISTRO = "/registro";
     public static final String STRING_INCIDENCIA_MANTENIMIENTO = "/incidencia/mantenimiento"; // Get: Incidencias de un empleado Post: finalizar incidencia
     public static final String STRING_INCIDENCIA_ADMIN = "/incidencia/administrador"; // Asignar/rechazar incidencias

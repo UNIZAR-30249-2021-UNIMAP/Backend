@@ -17,7 +17,7 @@ public class Sender {
 
     static final String directExchangeName = "tut.rpc";
 
-    @PostMapping(value = STRING_LOGIN)
+    @GetMapping(value = STRING_LOGIN)
     public String login(@RequestParam(value="email") String email, @RequestParam(value="contrasena") String contrasena) {
         System.out.println("Values: " +email +" " +contrasena);
         ArrayList<String> infoUser = new ArrayList<String>();
@@ -32,7 +32,7 @@ public class Sender {
     @PostMapping(value = STRING_REGISTRO)
     public String registro(@RequestParam("nombreUsuario") String nombre,
      @RequestParam("email") String email, @RequestParam("contrasena") String contrasena) {
-        System.out.println("Sending message...");
+        System.out.println("Values: " +email +" " +contrasena);
         ArrayList<String> infoUser = new ArrayList<String>();
         infoUser.add(STRING_REGISTRO);
         infoUser.add(nombre);
@@ -53,9 +53,24 @@ public class Sender {
         return response;
     }
 
+    @PostMapping(value = STRING_INCIDENCIA)
+    public String postIncidencia(@RequestParam("descripcion") String descripcion, @RequestParam("email") String email,
+     @RequestParam("idEspacio") String idEspacio) {
+        System.out.println("Sending message...");
+        System.out.println("Recibidos parámetros: " +descripcion +" "+email + " " +idEspacio);
+        ArrayList<String> incidencia = new ArrayList<String>();
+        incidencia.add(STRING_INCIDENCIA);
+        incidencia.add(descripcion);
+        incidencia.add(email);
+        incidencia.add(idEspacio);
+        //String response = (String) template.convertSendAndReceive(directExchangeName, "rpc", incidencia);
+        //System.out.println("Received in 'gateway/Sender' <" + response + ">");
+        return "response";
+    }
+
     @PostMapping(value = STRING_INCIDENCIA_MANTENIMIENTO)
     public String finalizarIncidencia(@RequestParam("idIncidencia") String idIncidencia) {
-        System.out.println("Sending message...");
+        System.out.println("Values: " +idIncidencia);
         ArrayList<String> incidencia = new ArrayList<String>();
         incidencia.add(STRING_INCIDENCIA_MANTENIMIENTO);
         incidencia.add(idIncidencia);
@@ -77,12 +92,14 @@ public class Sender {
     @PostMapping(value = STRING_INCIDENCIA_ADMIN)
     public String asignarRechazarIncidencia(@RequestParam("idIncidencia") String idIncidencia,
      @RequestParam("aceptar") String aceptar, @RequestParam("idEmpleado") String idEmpleado,
-     @RequestParam("prioridad") String prioridad, @RequestParam("motivo") String motivo) {
-        System.out.println("Sending message...");
+     //@RequestParam("prioridad") String prioridad, @RequestParam("motivo") String motivo) {
+     //   System.out.println("Sending message...");
+     @RequestParam("prioridad") String prioridad) {
+        System.out.println("Values: " +idIncidencia);
         ArrayList<String> incidencia = new ArrayList<String>();
         incidencia.add(STRING_INCIDENCIA_ADMIN);
         incidencia.add(idIncidencia); incidencia.add(aceptar); incidencia.add(idEmpleado); incidencia.add(prioridad);
-        incidencia.add(motivo);
+        //incidencia.add(motivo);
 
         String response = (String) template.convertSendAndReceive(directExchangeName, "rpc", incidencia);
         System.out.println("Received in 'gateway/Sender' <" + response + ">");
