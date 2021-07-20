@@ -33,10 +33,7 @@ public class Receiver {
                 return "login";
 
             case STRING_INCIDENCIA:
-                log.info("dentro de incidencia");
-                String json_respuesta = JSONArray.toJSONString(incidenciaService.findAll());;
-                log.info("JSON: " + json_respuesta);
-                return json_respuesta;
+                return JSONArray.toJSONString(incidenciaService.findAll());
 
             case STRING_INCIDENCIA_REPORTE:
                 Long idEspacio = Long.parseLong(message.remove(0));
