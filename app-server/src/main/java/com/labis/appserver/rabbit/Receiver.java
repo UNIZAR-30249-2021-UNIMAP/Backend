@@ -1,7 +1,9 @@
 package com.labis.appserver.rabbit;
 
+import com.google.gson.Gson;
 import com.labis.appserver.AppServerApplication;
 import com.labis.appserver.service.IncidenciaService;
+import net.minidev.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -31,7 +33,10 @@ public class Receiver {
                 return "login";
 
             case STRING_INCIDENCIA:
-                return "incidencia";
+                log.info("dentro de incidencia");
+                String json_respuesta = JSONArray.toJSONString(incidenciaService.findAll());;
+                log.info("JSON: " + json_respuesta);
+                return json_respuesta;
 
             case STRING_INCIDENCIA_REPORTE:
                 Long idEspacio = Long.parseLong(message.remove(0));
