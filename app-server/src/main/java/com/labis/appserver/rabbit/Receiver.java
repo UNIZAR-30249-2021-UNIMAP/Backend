@@ -1,8 +1,9 @@
 package com.labis.appserver.rabbit;
 
-import com.google.gson.Gson;
 import com.labis.appserver.AppServerApplication;
+import com.labis.appserver.model.PersonalMantenimiento;
 import com.labis.appserver.service.IncidenciaService;
+import com.labis.appserver.service.PersonalMantenimientoService;
 import net.minidev.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import static com.labis.appserver.common.Constantes.*;
 
@@ -22,6 +24,9 @@ public class Receiver {
 
     @Autowired
     IncidenciaService incidenciaService;
+
+    @Autowired
+    PersonalMantenimientoService personalMantenimientoService;
 
     @RabbitListener(queues = "tut.rpc.requests")
     public String receiveMessage(ArrayList<String> message) {
@@ -48,7 +53,19 @@ public class Receiver {
                 return "registro";
 
             case STRING_INCIDENCIA_MANTENIMIENTO:
-                return "incidencia mantenimiento";
+                if (message.remove(0).equals("GET")) {
+                    // Get: Incidencias de un empleado Post: finalizar incidencia
+                    long ID = Long.parseLong(message.remove(0));
+                    PersonalMantenimiento personalMantenimiento = personalMantenimientoService.findById(ID);
+
+                    //TODO: Comprobar que este JSON se puede utilizar correctamente
+                    return JSONArray.toJSONString(Collections.singletonList(personalMantenimiento.getTareasNormales().toString() +
+                            personalMantenimiento.getTareasUrgentes().toString()));
+                } else if (message.remove(0).equals("POST")) {
+
+                } else {
+                    return "ERROR EN EL TIPO DE PETICION";
+                }
 
             case STRING_INCIDENCIA_ADMIN:
                 long idIncidencia = Long.parseLong(message.remove(0));

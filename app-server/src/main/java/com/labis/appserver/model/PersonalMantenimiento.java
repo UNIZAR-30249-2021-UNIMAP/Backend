@@ -76,4 +76,12 @@ public class PersonalMantenimiento extends Persona {
     public void cambiarMaxTareasUrgentes(Integer nuevoMaxUrgentes) {
         this.maxNumTareasUrgentes = nuevoMaxUrgentes;
     }
+
+    public Set<Incidencia> getTareasNormales() {
+        return tareasNormales;
+    }
+
+    public Set<Incidencia> getTareasUrgentes() {
+        return tareasUrgentes;
+    }
 }

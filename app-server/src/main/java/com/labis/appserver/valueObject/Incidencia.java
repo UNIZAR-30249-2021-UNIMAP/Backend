@@ -107,4 +107,23 @@ public class Incidencia {
     public PersonalMantenimiento getPersonalMantenimientoNormal() {
         return personalMantenimientoNormal;
     }
+
+    @Override
+    public String toString() {
+        return "Incidencia{" +
+                "id=" + id +
+                ", personalMantenimientoNormal=" + personalMantenimientoNormal +
+                ", personalMantenimientoUrgente=" + personalMantenimientoUrgente +
+                ", idEspacio=" + idEspacio +
+                ", descripcion='" + descripcion + '\'' +
+                ", email='" + email + '\'' +
+                ", imagen='" + imagen + '\'' +
+                ", estado='" + estado + '\'' +
+                ", prioridad='" + prioridad + '\'' +
+                ", motivoRechazo='" + motivoRechazo + '\'' +
+                ", reportadoTimeStamp=" + reportadoTimeStamp +
+                ", asignadoTimeStamp=" + asignadoTimeStamp +
+                ", finalizadoTimeStamp=" + finalizadoTimeStamp +
+                '}';
+    }
 }
