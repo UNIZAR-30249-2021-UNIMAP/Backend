@@ -6,8 +6,7 @@ public class Constantes {
     public static final String STRING_INCIDENCIA = "/incidencia"; // Get: Todas las incidencias
     public static final String STRING_INCIDENCIA_REPORTE = "/incidencia/reporte"; // Post: Reporta la incidencia
     public static final String STRING_REGISTRO = "/registro";
-    public static final String STRING_INCIDENCIA_MANTENIMIENTO_GET = "/incidencia/mantenimiento"; // Get: Incidencias de un empleado
-    public static final String STRING_INCIDENCIA_MANTENIMIENTO_POST = "/incidencia/mantenimiento"; //Post: finalizar incidencia
+    public static final String STRING_INCIDENCIA_MANTENIMIENTO = "/incidencia/mantenimiento"; // Get: Incidencias de un empleado Post: finalizar incidencia
     public static final String STRING_INCIDENCIA_ADMIN = "/incidencia/administrador"; // Asignar/rechazar incidencias
     public static final String STRING_MANTENIMIENTO = "/mantenimiento"; // Get: lista de empleados
     public static final String STRING_ESPACIO = "/espacio"; // Get: info de un espacio Post: reserva espacio
