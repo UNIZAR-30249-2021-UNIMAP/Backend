@@ -90,7 +90,8 @@ public class Receiver {
                 }
 
             case STRING_MANTENIMIENTO:
-                return "Mantenimiento";
+                //lista de empleados
+                return JSONArray.toJSONString(personalMantenimientoService.findAll());
 
             case STRING_ESPACIO:
                 return "Espacio";
