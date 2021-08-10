@@ -4,6 +4,7 @@ import com.labis.appserver.AppServerApplication;
 import com.labis.appserver.model.PersonalMantenimiento;
 import com.labis.appserver.service.IncidenciaService;
 import com.labis.appserver.service.PersonalMantenimientoService;
+import com.labis.appserver.valueObject.Incidencia;
 import net.minidev.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import static com.labis.appserver.common.Constantes.*;
 
@@ -37,8 +39,16 @@ public class Receiver {
             case STRING_LOGIN:
                 return "login";
 
+            case STRING_REGISTRO:
+                return "registro";
+
             case STRING_INCIDENCIA:
-                return JSONArray.toJSONString(incidenciaService.findAll());
+                List<Incidencia> listaIncidencias = incidenciaService.findAll();
+                if (listaIncidencias.isEmpty()) {
+                    return "[]";
+                } else {
+                    return JSONArray.toJSONString(incidenciaService.findAll());
+                }
 
             case STRING_INCIDENCIA_REPORTE:
                 Long idEspacio = Long.parseLong(message.remove(0));
@@ -48,9 +58,6 @@ public class Receiver {
                 incidenciaService.reportarIncidencia(idEspacio, descripcion, email, imagen);
 
                 return STRING_STATUS_OK;
-
-            case STRING_REGISTRO:
-                return "registro";
 
             case STRING_INCIDENCIA_MANTENIMIENTO:
                 if (message.remove(0).equals("GET")) {
@@ -62,7 +69,7 @@ public class Receiver {
                     return JSONArray.toJSONString(Collections.singletonList(personalMantenimiento.getTareasNormales().toString() +
                             personalMantenimiento.getTareasUrgentes().toString()));
                 } else if (message.remove(0).equals("POST")) {
-
+                    //TODO: finalizar incidencia
                 } else {
                     return "ERROR EN EL TIPO DE PETICION";
                 }
