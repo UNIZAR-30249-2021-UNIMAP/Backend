@@ -88,26 +88,6 @@ public class Incidencia {
         return this.prioridad;
     }
 
-    public String getMotivoRechazo() {
-        return this.motivoRechazo;
-    }
-
-    public Timestamp getReportadoTimeStamp() {
-        return reportadoTimeStamp;
-    }
-
-    public Timestamp getAsignadoTimeStamp() {
-        return asignadoTimeStamp;
-    }
-
-    public Timestamp getFinalizadoTimeStamp() {
-        return finalizadoTimeStamp;
-    }
-
-    public PersonalMantenimiento getPersonalMantenimientoNormal() {
-        return personalMantenimientoNormal;
-    }
-
     @Override
     public String toString() {
         return "Incidencia{" +
