@@ -70,7 +70,7 @@ public class Sender {
     public String finalizarIncidencia(@RequestParam("idIncidencia") String idIncidencia) {
         System.out.println("Sending message...");
         ArrayList<String> incidencia = new ArrayList<String>();
-        incidencia.add(STRING_INCIDENCIA_MANTENIMIENTO);
+        incidencia.add(STRING_INCIDENCIA_MANTENIMIENTO); incidencia.add("POST");
         incidencia.add(idIncidencia);
         String response = (String) template.convertSendAndReceive(directExchangeName, "rpc", incidencia);
         System.out.println("Received in 'gateway/Sender' <" + response + ">");

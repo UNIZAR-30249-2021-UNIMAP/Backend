@@ -58,7 +58,6 @@ public class IncidenciaService {
             incidenciaRepository.save(incidencia);
         }
 
-        log.info("Resultado aceptarORechazar: " + resultado);
         return resultado;
     }
 
@@ -76,6 +75,15 @@ public class IncidenciaService {
         }
         
         return resultado;
+    }
+
+    public void finalizarIncidencia(long IdIncidencia) {
+        Optional<Incidencia> incidenciaOptional = incidenciaRepository.findById(IdIncidencia);
+        if (incidenciaOptional.isPresent()) {
+            Incidencia incidencia = incidenciaOptional.get();
+            incidencia.finalizar();
+            incidenciaRepository.save(incidencia);
+        }
     }
 
     public void Test() {

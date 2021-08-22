@@ -60,18 +60,22 @@ public class Receiver {
                 return STRING_STATUS_OK;
 
             case STRING_INCIDENCIA_MANTENIMIENTO:
-                if (message.remove(0).equals("GET")) {
-                    // Get: Incidencias de un empleado Post: finalizar incidencia
-                    long ID = Long.parseLong(message.remove(0));
-                    PersonalMantenimiento personalMantenimiento = personalMantenimientoService.findById(ID);
+                String tipoPeticion = message.remove(0);
+                if (tipoPeticion.equals("GET")) {
+                    // Get: Incidencias de un empleado
+                    long IdPersonalMantenimiento = Long.parseLong(message.remove(0));
+                    PersonalMantenimiento personalMantenimiento = personalMantenimientoService.findById(IdPersonalMantenimiento);
 
                     //TODO: Comprobar que este JSON se puede utilizar correctamente
                     return JSONArray.toJSONString(Collections.singletonList(personalMantenimiento.getTareasNormales().toString() +
                             personalMantenimiento.getTareasUrgentes().toString()));
-                } else if (message.remove(0).equals("POST")) {
-                    //TODO: finalizar incidencia
+                } else if (tipoPeticion.equals("POST")) {
+                    //Post: finalizar incidencia
+                    long IdIncidencia = Long.parseLong(message.remove(0));
+                    incidenciaService.finalizarIncidencia(IdIncidencia);
+                    return STRING_STATUS_OK;
                 } else {
-                    return "ERROR EN EL TIPO DE PETICION";
+                    return "ERROR EN EL TIPO DE PETICION ";
                 }
 
             case STRING_INCIDENCIA_ADMIN:
@@ -89,7 +93,6 @@ public class Receiver {
                 boolean resultado = incidenciaService.aceptarORechazarIncidencia(idIncidencia, aceptar,
                         idEmpleado, prioridad, motivo);
 
-                log.info("Resultado final:" + resultado);
                 if (resultado) {
                     return STRING_STATUS_OK;
                 } else {
