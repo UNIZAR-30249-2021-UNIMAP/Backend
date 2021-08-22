@@ -35,8 +35,8 @@ public class Sender {
         System.out.println("Sending message...");
         ArrayList<String> infoUser = new ArrayList<String>();
         infoUser.add(STRING_REGISTRO);
-        infoUser.add(nombre);
         infoUser.add(email);
+        infoUser.add(nombre);
         infoUser.add(contrasena);
         String response = (String) template.convertSendAndReceive(directExchangeName, "rpc", infoUser);
         System.out.println("Received in 'gateway/Sender' <" + response + ">");

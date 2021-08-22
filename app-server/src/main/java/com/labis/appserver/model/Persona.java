@@ -10,24 +10,31 @@ public class Persona {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String correo;
+    private String email;
     private String nombre;
     private String apellidos;
 
     public Persona() {}
 
-    public Persona(String correo, String nombre, String apellidos) {
-        this.correo = correo;
+    public Persona(String email, String nombre, String apellidos) {
+        this.email = email;
         this.nombre = nombre;
         this.apellidos = apellidos;
+    }
+
+    //Mediante registro, es posible que no se soliciten apellidos
+    public Persona(String email, String nombre) {
+        this.email = email;
+        this.nombre = nombre;
+        this.apellidos = "";
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getCorreo() {
-        return correo;
+    public String getEmail() {
+        return email;
     }
 
     public String getNombre() {

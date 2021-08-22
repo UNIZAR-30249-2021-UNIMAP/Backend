@@ -4,6 +4,7 @@ import com.labis.appserver.AppServerApplication;
 import com.labis.appserver.model.PersonalMantenimiento;
 import com.labis.appserver.service.IncidenciaService;
 import com.labis.appserver.service.PersonalMantenimientoService;
+import com.labis.appserver.service.UsuarioService;
 import com.labis.appserver.valueObject.Incidencia;
 import net.minidev.json.JSONArray;
 import org.slf4j.Logger;
@@ -30,6 +31,9 @@ public class Receiver {
     @Autowired
     PersonalMantenimientoService personalMantenimientoService;
 
+    @Autowired
+    UsuarioService usuarioService;
+
     @RabbitListener(queues = "tut.rpc.requests")
     public String receiveMessage(ArrayList<String> message) {
         System.out.println("Received in 'appserver/Receiver' <" + message + ">");
@@ -40,7 +44,11 @@ public class Receiver {
                 return "login";
 
             case STRING_REGISTRO:
-                return "registro";
+                String email = message.remove(0);
+                String nombre = message.remove(0);
+                String contrasena = message.remove(0);
+                usuarioService.registrarUsuario(email, nombre, contrasena);
+                return STRING_STATUS_OK;
 
             case STRING_INCIDENCIA:
                 List<Incidencia> listaIncidencias = incidenciaService.findAll();
@@ -53,7 +61,7 @@ public class Receiver {
             case STRING_INCIDENCIA_REPORTE:
                 Long idEspacio = Long.parseLong(message.remove(0));
                 String descripcion = message.remove(0);
-                String email = message.remove(0);
+                email = message.remove(0);
                 String imagen = message.remove(0);
                 incidenciaService.reportarIncidencia(idEspacio, descripcion, email, imagen);
 
