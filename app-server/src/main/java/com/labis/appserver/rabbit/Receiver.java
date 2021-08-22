@@ -36,7 +36,7 @@ public class Receiver {
 
     @RabbitListener(queues = "tut.rpc.requests")
     public String receiveMessage(ArrayList<String> message) {
-        System.out.println("Received in 'appserver/Receiver' <" + message + ">");
+        log.info("Received in 'appserver/Receiver' <" + message + ">");
 
         String guarda = message.remove(0);
         switch (guarda) {
@@ -47,8 +47,14 @@ public class Receiver {
                 String email = message.remove(0);
                 String nombre = message.remove(0);
                 String contrasena = message.remove(0);
-                usuarioService.registrarUsuario(email, nombre, contrasena);
-                return STRING_STATUS_OK;
+                boolean exitoRegistro = usuarioService.registrarUsuario(email, nombre, contrasena);
+                if (exitoRegistro) {
+                    return STRING_STATUS_OK;
+                } else {
+                    log.info("El email '" + email + "' ya esta registrado");
+                    return STRING_STATUS_ERROR;
+                }
+
 
             case STRING_INCIDENCIA:
                 List<Incidencia> listaIncidencias = incidenciaService.findAll();
@@ -98,10 +104,10 @@ public class Receiver {
                 String prioridad = message.remove(0);
                 String motivo = message.remove(0);
 
-                boolean resultado = incidenciaService.aceptarORechazarIncidencia(idIncidencia, aceptar,
+                boolean exitoAceptarRechazar = incidenciaService.aceptarORechazarIncidencia(idIncidencia, aceptar,
                         idEmpleado, prioridad, motivo);
 
-                if (resultado) {
+                if (exitoAceptarRechazar) {
                     return STRING_STATUS_OK;
                 } else {
                     return STRING_STATUS_ERROR;
