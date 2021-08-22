@@ -41,14 +41,24 @@ public class Receiver {
         String guarda = message.remove(0);
         switch (guarda) {
             case STRING_LOGIN:
-                return "login";
+                String email = message.remove(0);
+                String contrasena = message.remove(0);
+                boolean exitoLogin = usuarioService.loginUsuario(email, contrasena);
+                if (exitoLogin) {
+                    log.info(email + " logeado");
+                    return STRING_STATUS_OK;
+                } else {
+                    log.info(email + " no existe o contrasena incorrecta");
+                    return STRING_STATUS_ERROR;
+                }
 
             case STRING_REGISTRO:
-                String email = message.remove(0);
+                email = message.remove(0);
                 String nombre = message.remove(0);
-                String contrasena = message.remove(0);
+                contrasena = message.remove(0);
                 boolean exitoRegistro = usuarioService.registrarUsuario(email, nombre, contrasena);
                 if (exitoRegistro) {
+                    log.info(email + " registrado");
                     return STRING_STATUS_OK;
                 } else {
                     log.info("El email '" + email + "' ya esta registrado");

@@ -25,8 +25,8 @@ public class UsuarioService {
         }
     }
 
-    public void loginUsuario(String email, String contrasena) {
-
+    public boolean loginUsuario(String email, String contrasena) {
+        return usuarioRepository.existsByEmailAndContrasena(email, contrasena);
     }
 
 }
