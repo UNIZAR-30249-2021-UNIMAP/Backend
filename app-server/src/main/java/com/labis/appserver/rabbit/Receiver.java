@@ -43,14 +43,13 @@ public class Receiver {
             case STRING_LOGIN:
                 String email = message.remove(0);
                 String contrasena = message.remove(0);
-                boolean exitoLogin = usuarioService.loginUsuario(email, contrasena);
-                if (exitoLogin) {
-                    log.info(email + " logeado");
-                    return STRING_STATUS_OK;
-                } else {
-                    log.info(email + " no existe o contrasena incorrecta");
-                    return STRING_STATUS_ERROR;
+                int tipoLogin = usuarioService.loginUsuario(email, contrasena);
+                if (tipoLogin == TIPO_USUARIO_NO_EXISTE) {
+                    log.info(email + " intento de login fallido");
+                } else{
+                    log.info(email + " logeado correctamente");
                 }
+                return Integer.toString(tipoLogin);
 
             case STRING_REGISTRO:
                 email = message.remove(0);

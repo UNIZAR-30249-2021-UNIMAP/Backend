@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.labis.appserver.common.Constantes.TIPO_USUARIO_NO_EXISTE;
+
 @Service
 public class UsuarioService {
 
@@ -25,8 +27,14 @@ public class UsuarioService {
         }
     }
 
-    public boolean loginUsuario(String email, String contrasena) {
-        return usuarioRepository.existsByEmailAndContrasena(email, contrasena);
+    public int loginUsuario(String email, String contrasena) {
+        boolean existeUsuario = usuarioRepository.existsByEmailAndContrasena(email, contrasena);
+        if (existeUsuario) {
+            Usuario usuario = usuarioRepository.findByEmail(email);
+            return usuario.getTipo_usuario();
+        } else {
+            return TIPO_USUARIO_NO_EXISTE;
+        }
     }
 
 }
