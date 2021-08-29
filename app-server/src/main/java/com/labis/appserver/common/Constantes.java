@@ -20,4 +20,11 @@ public class Constantes {
     //Strings de tipo de código que puede devolver una petición al cliente
     public static final String STRING_STATUS_OK = "OK";
     public static final String STRING_STATUS_ERROR = "error";
+
+    //Tipos de usuarios que existen
+    public static final int  TIPO_USUARIO_NO_EXISTE = -1;
+    public static final int  TIPO_NORMAL = 0;
+    public static final int  TIPO_ADMINISTRADOR = 1;
+    public static final int  TIPO_MANTENIMIENTO = 2;
+
 }
