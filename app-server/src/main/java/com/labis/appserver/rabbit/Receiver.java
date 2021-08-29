@@ -64,7 +64,6 @@ public class Receiver {
                     return STRING_STATUS_ERROR;
                 }
 
-
             case STRING_INCIDENCIA:
                 List<Incidencia> listaIncidencias = incidenciaService.findAll();
                 if (listaIncidencias.isEmpty()) {

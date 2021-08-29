@@ -14,6 +14,7 @@ public class Usuario extends Persona {
     public Usuario(String email, String nombre, String contrasena) {
         super(email, nombre);
         this.contrasena = contrasena;
+        this.tipo_usuario = 0;
     }
 
     public int getTipo_usuario() {
