@@ -2,7 +2,6 @@ package com.labis.appserver.model;
 
 import com.labis.appserver.AppServerApplication;
 import com.labis.appserver.common.IssueStatus;
-import com.labis.appserver.valueObject.Incidencia;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

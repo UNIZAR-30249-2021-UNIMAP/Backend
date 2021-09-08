@@ -5,7 +5,7 @@ import com.labis.appserver.model.PersonalMantenimiento;
 import com.labis.appserver.service.IncidenciaService;
 import com.labis.appserver.service.PersonalMantenimientoService;
 import com.labis.appserver.service.UsuarioService;
-import com.labis.appserver.valueObject.Incidencia;
+import com.labis.appserver.model.Incidencia;
 import net.minidev.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
