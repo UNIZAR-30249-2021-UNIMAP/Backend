@@ -9,6 +9,8 @@ import com.labis.appserver.repository.IncidenciaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +23,9 @@ public class IncidenciaService {
 
     @Autowired
     PersonalMantenimientoService personalMantenimientoService;
+
+    @Autowired
+    JavaMailSender javaMailSender;
 
     private final IncidenciaRepository incidenciaRepository;
     private final PersonalMantenimientoRepository personalMantenimientoRepository;
@@ -63,9 +68,11 @@ public class IncidenciaService {
 
     private boolean rechazarIncidencia(Incidencia incidencia, String motivo) {
         incidencia.rechazar(motivo);
+        enviarEmail(incidencia.getDescripcion(), incidencia.getEmail(), motivo);
         return true;
     }
 
+    //Acepta una incidencia asignandola a un personal de mantenimiento
     private boolean aceptarIncidencia(Incidencia incidencia, PersonalMantenimiento personalMantenimiento, String prioridad) {
         boolean resultado;
         if (prioridad.equals(STRING_PRIORIDAD_NORMAL)) {
@@ -77,12 +84,46 @@ public class IncidenciaService {
         return resultado;
     }
 
+
+    //Finaliza una incidencia y avisa al usuario correspondiente
     public void finalizarIncidencia(long IdIncidencia) {
         Optional<Incidencia> incidenciaOptional = incidenciaRepository.findById(IdIncidencia);
         if (incidenciaOptional.isPresent()) {
             Incidencia incidencia = incidenciaOptional.get();
             incidencia.finalizar();
+            enviarEmail(incidencia.getDescripcion(), incidencia.getEmail());
             incidenciaRepository.save(incidencia);
+        }
+    }
+
+    //Envía un email al usuario con el motivo de rechazo de su incidencia
+    private void enviarEmail(String descripcion, String email, String motivoRechazo) {
+        log.info("email rechazo: " + email);
+        if (email != null) {
+            log.info("envia email a: " + email);
+            SimpleMailMessage msg = new SimpleMailMessage();
+            msg.setTo(email);
+
+            msg.setSubject("incidencia rechazada: " + descripcion);
+            msg.setText("Su incidencia ha sido rechazada por el siguiente motivo: " + motivoRechazo);
+
+
+            javaMailSender.send(msg);
+        }
+    }
+
+    //Envía un email al usuario informando de que se ha finalizado su incidencia
+    private void enviarEmail(String descripcion, String email) {
+        log.info("email finalizacion: " + email);
+        if (email != null) {
+            log.info("envia email a: " + email);
+            SimpleMailMessage msg = new SimpleMailMessage();
+            msg.setTo(email);
+
+            msg.setSubject("incidencia finalizada: " + descripcion);
+            msg.setText("Su incidencia ha sido finalizada por nuestro personal de mantenimiento.");
+
+            javaMailSender.send(msg);
         }
     }
 

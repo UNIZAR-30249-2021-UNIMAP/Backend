@@ -79,6 +79,10 @@ public class Incidencia {
         return this.prioridad;
     }
 
+    public String getEmail() { return incidenciaObjetoValor.email; }
+
+    public String getDescripcion() { return incidenciaObjetoValor.descripcion; }
+
     @Override
     public String toString() {
         return "Incidencia{" +
