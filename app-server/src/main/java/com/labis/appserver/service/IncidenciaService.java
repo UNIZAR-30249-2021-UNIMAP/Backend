@@ -68,7 +68,8 @@ public class IncidenciaService {
 
     private boolean rechazarIncidencia(Incidencia incidencia, String motivo) {
         incidencia.rechazar(motivo);
-        enviarEmail(incidencia.getDescripcion(), incidencia.getEmail(), motivo);
+        //TODO: Descomentar cuando se ponga el correo en application.yml
+        //enviarEmail(incidencia.getDescripcion(), incidencia.getEmail(), motivo);
         return true;
     }
 
@@ -91,15 +92,15 @@ public class IncidenciaService {
         if (incidenciaOptional.isPresent()) {
             Incidencia incidencia = incidenciaOptional.get();
             incidencia.finalizar();
-            enviarEmail(incidencia.getDescripcion(), incidencia.getEmail());
+            //TODO: Descomentar cuando se ponga el correo en application.yml
+            //enviarEmail(incidencia.getDescripcion(), incidencia.getEmail());
             incidenciaRepository.save(incidencia);
         }
     }
 
     //Envía un email al usuario con el motivo de rechazo de su incidencia
     private void enviarEmail(String descripcion, String email, String motivoRechazo) {
-        log.info("email rechazo: " + email);
-        if (email != null) {
+        if (!email.equals("")) {
             log.info("envia email a: " + email);
             SimpleMailMessage msg = new SimpleMailMessage();
             msg.setTo(email);
@@ -114,8 +115,7 @@ public class IncidenciaService {
 
     //Envía un email al usuario informando de que se ha finalizado su incidencia
     private void enviarEmail(String descripcion, String email) {
-        log.info("email finalizacion: " + email);
-        if (email != null) {
+        if (!email.equals("")) {
             log.info("envia email a: " + email);
             SimpleMailMessage msg = new SimpleMailMessage();
             msg.setTo(email);
