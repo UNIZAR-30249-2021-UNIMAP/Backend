@@ -11,7 +11,6 @@ services:
 
   app-server:
     build: ./app-server
-    restart: always
     depends_on:
       - rabbit
       - postgis
