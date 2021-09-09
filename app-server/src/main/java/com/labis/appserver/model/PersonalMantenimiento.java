@@ -2,13 +2,14 @@ package com.labis.appserver.model;
 
 import com.labis.appserver.AppServerApplication;
 import com.labis.appserver.common.IssueStatus;
-import com.labis.appserver.valueObject.Incidencia;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+
+import static com.labis.appserver.common.Constantes.TIPO_MANTENIMIENTO;
 
 @Entity
 public class PersonalMantenimiento extends Persona {
@@ -25,8 +26,8 @@ public class PersonalMantenimiento extends Persona {
 
     public PersonalMantenimiento() {}
 
-    public PersonalMantenimiento(String correo, String nombre, String apellidos) {
-        super(correo, nombre, apellidos);
+    public PersonalMantenimiento(String email, String nombre, String apellidos, String contrasena) {
+        super(email, nombre, apellidos, contrasena, TIPO_MANTENIMIENTO);
         this.tareasNormales = new HashSet<Incidencia>();
         this.tareasUrgentes = new HashSet<Incidencia>();
         this.maxNumTareasNormales = 5;
@@ -84,4 +85,8 @@ public class PersonalMantenimiento extends Persona {
     public Set<Incidencia> getTareasUrgentes() {
         return tareasUrgentes;
     }
+
+    public int getNumTareasNormales() { return tareasNormales.size(); }
+
+    public int getNumTareasUrgentes() { return tareasUrgentes.size(); }
 }

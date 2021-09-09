@@ -5,6 +5,7 @@ import com.labis.appserver.model.Espacio;
 import com.labis.appserver.model.PersonalMantenimiento;
 import com.labis.appserver.service.EspacioService;
 import com.labis.appserver.service.IncidenciaService;
+import com.labis.appserver.service.PersonaService;
 import com.labis.appserver.service.PersonalMantenimientoService;
 import com.labis.appserver.service.UsuarioService;
 import com.labis.appserver.valueObject.Incidencia;
@@ -15,6 +16,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.util.ArrayList;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -33,7 +35,7 @@ public class Receiver {
     PersonalMantenimientoService personalMantenimientoService;
 
     @Autowired
-    UsuarioService usuarioService;
+    PersonaService personaService;
 
     @Autowired
     EspacioService espacioService;
@@ -47,20 +49,17 @@ public class Receiver {
             case STRING_LOGIN:
                 String email = message.remove(0);
                 String contrasena = message.remove(0);
-                boolean exitoLogin = usuarioService.loginUsuario(email, contrasena);
-                if (exitoLogin) {
-                    log.info(email + " logeado");
-                    return STRING_STATUS_OK;
-                } else {
-                    log.info(email + " no existe o contrasena incorrecta");
-                    return STRING_STATUS_ERROR;
+                int tipoLogin = personaService.loginPersona(email, contrasena);
+                if (tipoLogin == TIPO_USUARIO_NO_EXISTE) {
+                    log.info(email + " intento de login fallido");
                 }
+                return Integer.toString(tipoLogin);
 
             case STRING_REGISTRO:
                 email = message.remove(0);
                 String nombre = message.remove(0);
                 contrasena = message.remove(0);
-                boolean exitoRegistro = usuarioService.registrarUsuario(email, nombre, contrasena);
+                boolean exitoRegistro = personaService.registrarPersona(email, nombre, contrasena);
                 if (exitoRegistro) {
                     log.info(email + " registrado");
                     return STRING_STATUS_OK;
@@ -69,17 +68,11 @@ public class Receiver {
                     return STRING_STATUS_ERROR;
                 }
 
-
             case STRING_INCIDENCIA:
-                List<Incidencia> listaIncidencias = incidenciaService.findAll();
-                if (listaIncidencias.isEmpty()) {
-                    return "[]";
-                } else {
-                    return JSONArray.toJSONString(incidenciaService.findAll());
-                }
+                return incidenciaService.informeTodasIncidencias().toJSONString();
 
             case STRING_INCIDENCIA_REPORTE:
-                Long idEspacio = Long.parseLong(message.remove(0));
+                String idEspacio = message.remove(0);
                 String descripcion = message.remove(0);
                 email = message.remove(0);
                 String imagen = message.remove(0);
@@ -91,12 +84,8 @@ public class Receiver {
                 String tipoPeticion = message.remove(0);
                 if (tipoPeticion.equals("GET")) {
                     // Get: Incidencias de un empleado
-                    long IdPersonalMantenimiento = Long.parseLong(message.remove(0));
-                    PersonalMantenimiento personalMantenimiento = personalMantenimientoService.findById(IdPersonalMantenimiento);
-
-                    //TODO: Comprobar que este JSON se puede utilizar correctamente
-                    return JSONArray.toJSONString(Collections.singletonList(personalMantenimiento.getTareasNormales().toString() +
-                            personalMantenimiento.getTareasUrgentes().toString()));
+                    long idPersonalMantenimiento = Long.parseLong(message.remove(0));
+                    return personalMantenimientoService.incidenciasEmpleado(idPersonalMantenimiento).toJSONString();
                 } else if (tipoPeticion.equals("POST")) {
                     //Post: finalizar incidencia
                     long IdIncidencia = Long.parseLong(message.remove(0));
@@ -129,7 +118,7 @@ public class Receiver {
 
             case STRING_MANTENIMIENTO:
                 //lista de empleados
-                return JSONArray.toJSONString(personalMantenimientoService.findAll());
+                return personalMantenimientoService.listaOcupacionPersonal().toJSONString();
 
             case STRING_ESPACIO:
                 if (message.size() <= 1) {
@@ -194,6 +183,18 @@ public class Receiver {
                     return JSONArray.toJSONString(this.espacioService.getEspaciosParametrizados(aforoMinimo, proyector, edificio, planta, tipoSala, fechaInicio, fechaFin));
                 }
                 catch (Exception e) {
+                    return STRING_STATUS_ERROR;
+                }
+
+            case STRING_REGISTRO_MANTENIMIENTO:
+                nombre = message.remove(0);
+                email = message.remove(0);
+                String apellidos = message.remove(0);
+                contrasena = message.remove(0);
+                exitoRegistro = personalMantenimientoService.registrarPersonalMantenimiento(email, nombre, apellidos, contrasena);
+                if (exitoRegistro) {
+                    return STRING_STATUS_OK;
+                } else {
                     return STRING_STATUS_ERROR;
                 }
 

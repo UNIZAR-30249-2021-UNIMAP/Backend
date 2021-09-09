@@ -1,9 +1,8 @@
-package com.labis.appserver.valueObject;
+package com.labis.appserver.model;
 
 import com.labis.appserver.common.Constantes;
 import com.labis.appserver.common.IssueStatus;
-import com.labis.appserver.model.PersonalMantenimiento;
-
+import com.labis.appserver.valueObject.IncidenciaObjetoValor;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -23,31 +22,24 @@ public class Incidencia {
     private PersonalMantenimiento personalMantenimientoUrgente;
 
     //Variables del reporte
-    private Long idEspacio;
-    private String descripcion;
-    private String email;
-    private String imagen;
+    private String idEspacio;
 
     //Variables del estado de la incidencia
     private String estado;
     private String prioridad;
     private String motivoRechazo;
-    private Timestamp reportadoTimeStamp;
     private Timestamp asignadoTimeStamp;
     private Timestamp finalizadoTimeStamp;
 
-    public Incidencia() {
-        this.estado = IssueStatus.REPORTADO.toString();
-        this.reportadoTimeStamp = Timestamp.from(Instant.now());
-    }
+    @Embedded
+    private IncidenciaObjetoValor incidenciaObjetoValor;
 
-    public Incidencia(Long idEspacio, String descripcion, String email, String imagen){
+    public Incidencia() {}
+
+    public Incidencia(String idEspacio, String descripcion, String email, String imagen){
+        incidenciaObjetoValor = new IncidenciaObjetoValor(descripcion, email, imagen, Timestamp.from(Instant.now()));
         this.estado = IssueStatus.REPORTADO.toString();
-        this.reportadoTimeStamp = Timestamp.from(Instant.now());
         this.idEspacio = idEspacio;
-        this.descripcion = descripcion;
-        this.email = email;
-        this.imagen = imagen;
     }
 
     public void rechazar(String motivo) {
@@ -88,22 +80,13 @@ public class Incidencia {
         return this.prioridad;
     }
 
-    @Override
-    public String toString() {
-        return "Incidencia{" +
-                "id=" + id +
-                ", personalMantenimientoNormal=" + personalMantenimientoNormal +
-                ", personalMantenimientoUrgente=" + personalMantenimientoUrgente +
-                ", idEspacio=" + idEspacio +
-                ", descripcion='" + descripcion + '\'' +
-                ", email='" + email + '\'' +
-                ", imagen='" + imagen + '\'' +
-                ", estado='" + estado + '\'' +
-                ", prioridad='" + prioridad + '\'' +
-                ", motivoRechazo='" + motivoRechazo + '\'' +
-                ", reportadoTimeStamp=" + reportadoTimeStamp +
-                ", asignadoTimeStamp=" + asignadoTimeStamp +
-                ", finalizadoTimeStamp=" + finalizadoTimeStamp +
-                '}';
-    }
+    public String getEmail() { return incidenciaObjetoValor.email; }
+
+    public String getDescripcion() { return incidenciaObjetoValor.descripcion; }
+
+    public String getImagen() { return incidenciaObjetoValor.imagen; }
+
+    public Object getReportadoTimeStamp() { return incidenciaObjetoValor.reportadoTimeStamp; }
+
+    public String getIdEspacio() { return idEspacio; }
 }

@@ -23,6 +23,21 @@ spring:
     password: adminunimap123
     driver-class-name: org.postgresql.Driver
 
+  mail:
+    username: NIP@unizar.es
+    password: password
+    host: smtp.gmail.com
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          connectionTimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+          starttls:
+            enable: true
+
 #Tomcat Embedded Server Configuration
 server:
   port: 8001
