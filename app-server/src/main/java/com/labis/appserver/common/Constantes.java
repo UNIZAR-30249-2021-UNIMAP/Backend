@@ -12,6 +12,7 @@ public class Constantes {
     public static final String STRING_ESPACIO = "/espacio"; // Get: info de un espacio Post: reserva espacio
     public static final String STRING_AFORO = "/aforo"; // Get: lista de espacios y su aforo Post: aforo o regla de aforo
     public static final String STRING_ESPACIOS = "/espacios"; // Get: lista de espacios parametrizada
+    public static final String STRING_REGISTRO_MANTENIMIENTO = "/registro/mantenimiento"; // post: Crea un nuevo personal de mantenimiento
 
     //Strings de prioridad de una incidencia
     public static final String STRING_PRIORIDAD_NORMAL =  "NORMAL";
