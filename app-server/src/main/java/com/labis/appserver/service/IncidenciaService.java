@@ -53,6 +53,7 @@ public class IncidenciaService {
             jsonObject.put("id", incidencia.getId());
             jsonObject.put("descripcion", incidencia.getDescripcion());
             jsonObject.put("imagen", incidencia.getImagen());
+            jsonObject.put("reportadoTimeStamp", incidencia.getReportadoTimeStamp());
             jsonArray.add(jsonObject);
         }
         return jsonArray;

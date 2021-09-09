@@ -86,4 +86,5 @@ public class Incidencia {
 
     public String getImagen() { return incidenciaObjetoValor.imagen; }
 
+    public Object getReportadoTimeStamp() { return incidenciaObjetoValor.reportadoTimeStamp; }
 }
