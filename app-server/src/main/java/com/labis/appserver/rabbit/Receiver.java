@@ -65,12 +65,6 @@ public class Receiver {
                 }
 
             case STRING_INCIDENCIA:
-//                List<Incidencia> listaIncidencias = incidenciaService.findAll();
-//                if (listaIncidencias.isEmpty()) {
-//                    return "[]";
-//                } else {
-//                    return JSONArray.toJSONString(incidenciaService.findAll());
-//                }
                 return incidenciaService.informeTodasIncidencias().toJSONString();
 
             case STRING_INCIDENCIA_REPORTE:
