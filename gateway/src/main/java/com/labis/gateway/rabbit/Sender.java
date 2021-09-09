@@ -160,10 +160,12 @@ public class Sender {
 
     @PostMapping(value = STRING_REGISTRO_MANTENIMIENTO)
     public String registroPersonalMantenimiento(@RequestParam("nombreUsuario") String nombre,
-        @RequestParam("email") String email, @RequestParam("contrasena") String contrasena) {
+                                                @RequestParam("apellidos") String apellidos,
+                                                @RequestParam("email") String email,
+                                                @RequestParam("contrasena") String contrasena) {
         ArrayList<String> registro = new ArrayList<String>();
         registro.add(STRING_REGISTRO_MANTENIMIENTO);
-        registro.add(nombre); registro.add(email); registro.add(contrasena);
+        registro.add(nombre); registro.add(email); registro.add(apellidos); registro.add(contrasena);
 
         String response = (String) template.convertSendAndReceive(directExchangeName, "rpc", registro);
         System.out.println("Received in 'gateway/Sender' <" + response + ">");

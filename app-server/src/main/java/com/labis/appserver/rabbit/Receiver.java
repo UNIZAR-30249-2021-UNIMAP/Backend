@@ -1,12 +1,9 @@
 package com.labis.appserver.rabbit;
 
 import com.labis.appserver.AppServerApplication;
-import com.labis.appserver.model.PersonalMantenimiento;
 import com.labis.appserver.service.IncidenciaService;
+import com.labis.appserver.service.PersonaService;
 import com.labis.appserver.service.PersonalMantenimientoService;
-import com.labis.appserver.service.UsuarioService;
-import com.labis.appserver.model.Incidencia;
-import net.minidev.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -14,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import static com.labis.appserver.common.Constantes.*;
 
@@ -32,7 +27,7 @@ public class Receiver {
     PersonalMantenimientoService personalMantenimientoService;
 
     @Autowired
-    UsuarioService usuarioService;
+    PersonaService personaService;
 
     @RabbitListener(queues = "tut.rpc.requests")
     public String receiveMessage(ArrayList<String> message) {
@@ -43,11 +38,9 @@ public class Receiver {
             case STRING_LOGIN:
                 String email = message.remove(0);
                 String contrasena = message.remove(0);
-                int tipoLogin = usuarioService.loginUsuario(email, contrasena);
+                int tipoLogin = personaService.loginPersona(email, contrasena);
                 if (tipoLogin == TIPO_USUARIO_NO_EXISTE) {
                     log.info(email + " intento de login fallido");
-                } else{
-                    log.info(email + " logeado correctamente");
                 }
                 return Integer.toString(tipoLogin);
 
@@ -55,7 +48,7 @@ public class Receiver {
                 email = message.remove(0);
                 String nombre = message.remove(0);
                 contrasena = message.remove(0);
-                boolean exitoRegistro = usuarioService.registrarUsuario(email, nombre, contrasena);
+                boolean exitoRegistro = personaService.registrarPersona(email, nombre, contrasena);
                 if (exitoRegistro) {
                     log.info(email + " registrado");
                     return STRING_STATUS_OK;
@@ -124,6 +117,18 @@ public class Receiver {
 
             case STRING_ESPACIOS:
                 return "Espacios";
+
+            case STRING_REGISTRO_MANTENIMIENTO:
+                nombre = message.remove(0);
+                email = message.remove(0);
+                String apellidos = message.remove(0);
+                contrasena = message.remove(0);
+                exitoRegistro = personalMantenimientoService.registrarPersonalMantenimiento(email, nombre, apellidos, contrasena);
+                if (exitoRegistro) {
+                    return STRING_STATUS_OK;
+                } else {
+                    return STRING_STATUS_ERROR;
+                }
 
             default:
                 return "Error";

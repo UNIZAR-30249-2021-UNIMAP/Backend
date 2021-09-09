@@ -1,18 +1,19 @@
 package com.labis.appserver.service;
 
-import com.labis.appserver.AppServerApplication;
 import com.labis.appserver.model.PersonalMantenimiento;
 import com.labis.appserver.repository.PersonalMantenimientoRepository;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class PersonalMantenimientoService {
+
+    @Autowired
+    PersonaService personaService;
 
     private final PersonalMantenimientoRepository repository;
 
@@ -49,5 +50,15 @@ public class PersonalMantenimientoService {
         jsonObject.put("tareasNormales", personalMantenimiento.getTareasNormales());
         jsonObject.put("tareasUrgentes", personalMantenimiento.getTareasUrgentes());
         return jsonObject;
+    }
+
+    public boolean registrarPersonalMantenimiento(String email, String nombre, String apellidos, String contrasena) {
+        if (personaService.existePersona(email)) {
+            return false;
+        } else {
+            PersonalMantenimiento personalMantenimiento = new PersonalMantenimiento(email, nombre, apellidos, contrasena);
+            repository.save(personalMantenimiento);
+            return true;
+        }
     }
 }

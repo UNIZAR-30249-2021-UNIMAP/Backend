@@ -9,6 +9,8 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.labis.appserver.common.Constantes.TIPO_MANTENIMIENTO;
+
 @Entity
 public class PersonalMantenimiento extends Persona {
     private static final Logger log = LoggerFactory.getLogger(AppServerApplication.class);
@@ -24,8 +26,8 @@ public class PersonalMantenimiento extends Persona {
 
     public PersonalMantenimiento() {}
 
-    public PersonalMantenimiento(String correo, String nombre, String apellidos) {
-        super(correo, nombre, apellidos);
+    public PersonalMantenimiento(String email, String nombre, String apellidos, String contrasena) {
+        super(email, nombre, apellidos, contrasena, TIPO_MANTENIMIENTO);
         this.tareasNormales = new HashSet<Incidencia>();
         this.tareasUrgentes = new HashSet<Incidencia>();
         this.maxNumTareasNormales = 5;

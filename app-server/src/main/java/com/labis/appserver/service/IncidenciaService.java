@@ -143,23 +143,4 @@ public class IncidenciaService {
             javaMailSender.send(msg);
         }
     }
-
-    public void Test() {
-        Incidencia prueba = new Incidencia();
-        PersonalMantenimiento personalMantenimiento = new PersonalMantenimiento("x@x.x", "pepe", "palotes");
-        personalMantenimientoRepository.save(personalMantenimiento);
-
-        incidenciaRepository.save(prueba);
-
-        System.out.println("ESTADO pendiente: " + incidenciaRepository.findByEstado(IssueStatus.REPORTADO.toString()).iterator().next().getId());
-        System.out.println("ESTADO pendiente: " + incidenciaRepository.findByEstado(IssueStatus.REPORTADO.toString()).iterator().next().getPrioridad());
-
-        personalMantenimiento.anyadirIncidenciaNormal(prueba);
-
-        log.info("Funcion test ejecutando");
-        incidenciaRepository.save(prueba);
-
-        personalMantenimientoRepository.save(personalMantenimiento);
-        System.out.println("ESTADO: " + incidenciaRepository.findByEstado(IssueStatus.PENDIENTE.toString()).iterator().next().getId());
-    }
 }
