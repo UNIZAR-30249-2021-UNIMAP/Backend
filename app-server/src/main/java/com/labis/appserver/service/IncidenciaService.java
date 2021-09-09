@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.labis.appserver.common.Constantes.*;
+import static com.labis.appserver.common.IssueStatus.REPORTADO;
 
 @Service
 public class IncidenciaService {
@@ -46,7 +47,7 @@ public class IncidenciaService {
 
     public JSONArray informeTodasIncidencias() {
         JSONArray jsonArray = new JSONArray();
-        Iterable<Incidencia> incidencias = incidenciaRepository.findAll();
+        Iterable<Incidencia> incidencias = incidenciaRepository.findAllByEstado(REPORTADO.toString());
         for (Incidencia incidencia : incidencias) {
             JSONObject jsonObject = new JSONObject();
 
@@ -54,12 +55,13 @@ public class IncidenciaService {
             jsonObject.put("descripcion", incidencia.getDescripcion());
             jsonObject.put("imagen", incidencia.getImagen());
             jsonObject.put("reportadoTimeStamp", incidencia.getReportadoTimeStamp());
+            jsonObject.put("idEspacio", incidencia.getIdEspacio());
             jsonArray.add(jsonObject);
         }
         return jsonArray;
     }
 
-    public void reportarIncidencia(Long idEspacio, String descripcion, String email, String imagen) {
+    public void reportarIncidencia(String idEspacio, String descripcion, String email, String imagen) {
         Incidencia incidencia = new Incidencia(idEspacio, descripcion, email, imagen);
         incidenciaRepository.save(incidencia);
     }

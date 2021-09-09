@@ -22,7 +22,7 @@ public class Incidencia {
     private PersonalMantenimiento personalMantenimientoUrgente;
 
     //Variables del reporte
-    private Long idEspacio;
+    private String idEspacio;
 
     //Variables del estado de la incidencia
     private String estado;
@@ -36,7 +36,7 @@ public class Incidencia {
 
     public Incidencia() {}
 
-    public Incidencia(Long idEspacio, String descripcion, String email, String imagen){
+    public Incidencia(String idEspacio, String descripcion, String email, String imagen){
         incidenciaObjetoValor = new IncidenciaObjetoValor(descripcion, email, imagen, Timestamp.from(Instant.now()));
         this.estado = IssueStatus.REPORTADO.toString();
         this.idEspacio = idEspacio;
@@ -87,4 +87,6 @@ public class Incidencia {
     public String getImagen() { return incidenciaObjetoValor.imagen; }
 
     public Object getReportadoTimeStamp() { return incidenciaObjetoValor.reportadoTimeStamp; }
+
+    public String getIdEspacio() { return idEspacio; }
 }

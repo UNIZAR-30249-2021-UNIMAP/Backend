@@ -8,4 +8,6 @@ public interface IncidenciaRepository extends CrudRepository<Incidencia, Long> {
 
     Iterable<Incidencia> findByEstado(String estado);
 
+    Iterable<Incidencia> findAllByEstado(String estado);
+
 }

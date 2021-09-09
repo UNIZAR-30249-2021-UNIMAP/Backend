@@ -61,7 +61,7 @@ public class Receiver {
                 return incidenciaService.informeTodasIncidencias().toJSONString();
 
             case STRING_INCIDENCIA_REPORTE:
-                Long idEspacio = Long.parseLong(message.remove(0));
+                String idEspacio = message.remove(0);
                 String descripcion = message.remove(0);
                 email = message.remove(0);
                 String imagen = message.remove(0);
