@@ -83,4 +83,8 @@ public class PersonalMantenimiento extends Persona {
     public Set<Incidencia> getTareasUrgentes() {
         return tareasUrgentes;
     }
+
+    public int getNumTareasNormales() { return tareasNormales.size(); }
+
+    public int getNumTareasUrgentes() { return tareasUrgentes.size(); }
 }

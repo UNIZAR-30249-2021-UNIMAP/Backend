@@ -123,7 +123,7 @@ public class Receiver {
 
             case STRING_MANTENIMIENTO:
                 //lista de empleados
-                return JSONArray.toJSONString(personalMantenimientoService.findAll());
+                return personalMantenimientoService.listaOcupacionPersonal().toJSONString();
 
             case STRING_ESPACIO:
                 return "Espacio";
