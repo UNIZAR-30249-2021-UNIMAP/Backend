@@ -85,12 +85,8 @@ public class Receiver {
                 String tipoPeticion = message.remove(0);
                 if (tipoPeticion.equals("GET")) {
                     // Get: Incidencias de un empleado
-                    long IdPersonalMantenimiento = Long.parseLong(message.remove(0));
-                    PersonalMantenimiento personalMantenimiento = personalMantenimientoService.findById(IdPersonalMantenimiento);
-
-                    //TODO: Comprobar que este JSON se puede utilizar correctamente
-                    return JSONArray.toJSONString(Collections.singletonList(personalMantenimiento.getTareasNormales().toString() +
-                            personalMantenimiento.getTareasUrgentes().toString()));
+                    long idPersonalMantenimiento = Long.parseLong(message.remove(0));
+                    return personalMantenimientoService.incidenciasEmpleado(idPersonalMantenimiento).toJSONString();
                 } else if (tipoPeticion.equals("POST")) {
                     //Post: finalizar incidencia
                     long IdIncidencia = Long.parseLong(message.remove(0));

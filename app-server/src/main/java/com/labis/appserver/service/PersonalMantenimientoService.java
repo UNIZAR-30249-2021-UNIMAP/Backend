@@ -43,4 +43,11 @@ public class PersonalMantenimientoService {
         return jsonArray;
     }
 
+    public JSONObject incidenciasEmpleado(long idPersonalMantenimiento) {
+        JSONObject jsonObject = new JSONObject();
+        PersonalMantenimiento personalMantenimiento = findById(idPersonalMantenimiento);
+        jsonObject.put("tareasNormales", personalMantenimiento.getTareasNormales());
+        jsonObject.put("tareasUrgentes", personalMantenimiento.getTareasUrgentes());
+        return jsonObject;
+    }
 }

@@ -38,8 +38,7 @@ public class IncidenciaService {
     private static final Logger log = LoggerFactory.getLogger(AppServerApplication.class);
 
     public List<Incidencia> findAll() {
-        List<Incidencia> incidencias = (List<Incidencia>) incidenciaRepository.findAll();
-        return incidencias;
+        return (List<Incidencia>) incidenciaRepository.findAll();
     }
 
     public void reportarIncidencia(Long idEspacio, String descripcion, String email, String imagen) {
