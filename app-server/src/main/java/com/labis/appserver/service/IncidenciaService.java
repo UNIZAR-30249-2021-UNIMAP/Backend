@@ -6,6 +6,8 @@ import com.labis.appserver.model.PersonalMantenimiento;
 import com.labis.appserver.repository.PersonalMantenimientoRepository;
 import com.labis.appserver.model.Incidencia;
 import com.labis.appserver.repository.IncidenciaRepository;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +42,20 @@ public class IncidenciaService {
 
     public List<Incidencia> findAll() {
         return (List<Incidencia>) incidenciaRepository.findAll();
+    }
+
+    public JSONArray informeTodasIncidencias() {
+        JSONArray jsonArray = new JSONArray();
+        Iterable<Incidencia> incidencias = incidenciaRepository.findAll();
+        for (Incidencia incidencia : incidencias) {
+            JSONObject jsonObject = new JSONObject();
+
+            jsonObject.put("id", incidencia.getId());
+            jsonObject.put("descripcion", incidencia.getDescripcion());
+            jsonObject.put("imagen", incidencia.getImagen());
+            jsonArray.add(jsonObject);
+        }
+        return jsonArray;
     }
 
     public void reportarIncidencia(Long idEspacio, String descripcion, String email, String imagen) {

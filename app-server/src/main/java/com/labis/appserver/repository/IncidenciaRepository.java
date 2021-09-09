@@ -8,7 +8,4 @@ public interface IncidenciaRepository extends CrudRepository<Incidencia, Long> {
 
     Iterable<Incidencia> findByEstado(String estado);
 
-    Iterable<Incidencia> findByPersonalMantenimientoNormal(PersonalMantenimiento personalMantenimiento);
-
-    Iterable<Incidencia> findByPersonalMantenimientoUrgente(PersonalMantenimiento personalMantenimiento);
 }

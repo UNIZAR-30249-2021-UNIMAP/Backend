@@ -31,6 +31,7 @@ public class Incidencia {
     private Timestamp asignadoTimeStamp;
     private Timestamp finalizadoTimeStamp;
 
+    @Embedded
     private IncidenciaObjetoValor incidenciaObjetoValor;
 
     public Incidencia() {}
@@ -83,22 +84,6 @@ public class Incidencia {
 
     public String getDescripcion() { return incidenciaObjetoValor.descripcion; }
 
-    @Override
-    public String toString() {
-        return "Incidencia{" +
-                "id=" + id +
-                ", personalMantenimientoNormal=" + personalMantenimientoNormal +
-                ", personalMantenimientoUrgente=" + personalMantenimientoUrgente +
-                ", idEspacio=" + idEspacio +
-                ", descripcion='" + incidenciaObjetoValor.descripcion + '\'' +
-                ", email='" + incidenciaObjetoValor.email + '\'' +
-                ", imagen='" + incidenciaObjetoValor.imagen + '\'' +
-                ", estado='" + estado + '\'' +
-                ", prioridad='" + prioridad + '\'' +
-                ", motivoRechazo='" + motivoRechazo + '\'' +
-                ", reportadoTimeStamp=" + incidenciaObjetoValor.reportadoTimeStamp +
-                ", asignadoTimeStamp=" + asignadoTimeStamp +
-                ", finalizadoTimeStamp=" + finalizadoTimeStamp +
-                '}';
-    }
+    public String getImagen() { return incidenciaObjetoValor.imagen; }
+
 }
