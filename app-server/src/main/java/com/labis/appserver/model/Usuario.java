@@ -1,12 +1,17 @@
 package com.labis.appserver.model;
 
 import javax.persistence.Entity;
-import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import java.util.Set;
 
 @Entity
 public class Usuario extends Persona {
 
     String contrasena;
+
+    @OneToMany(mappedBy = "reservadoPor", fetch = FetchType.EAGER)
+    private Set<Reserva> reservas;
 
     public Usuario() {}
 
