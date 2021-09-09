@@ -13,7 +13,6 @@ import java.util.List;
 
 @Service
 public class PersonalMantenimientoService {
-    private static final Logger log = LoggerFactory.getLogger(AppServerApplication.class);
 
     private final PersonalMantenimientoRepository repository;
 
@@ -34,8 +33,6 @@ public class PersonalMantenimientoService {
         Iterable<PersonalMantenimiento> personalMantenimientoIterable = repository.findAll();
 
         for (PersonalMantenimiento personalMantenimiento : personalMantenimientoIterable) {
-            log.info(personalMantenimiento.toString());
-            log.info("ID: " + personalMantenimiento.getId());
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", personalMantenimiento.getId());
             jsonObject.put("nombre", personalMantenimiento.getNombre());
