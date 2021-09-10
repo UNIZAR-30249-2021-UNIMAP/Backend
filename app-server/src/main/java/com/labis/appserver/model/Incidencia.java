@@ -65,6 +65,8 @@ public class Incidencia {
     public void finalizar() {
         this.estado = IssueStatus.FINALIZADA.toString();
         this.finalizadoTimeStamp = Timestamp.from(Instant.now());
+        this.personalMantenimientoNormal = null;
+        this.personalMantenimientoUrgente = null;
     }
 
 

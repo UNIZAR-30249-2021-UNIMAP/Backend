@@ -2,13 +2,10 @@ package com.labis.appserver.rabbit;
 
 import com.labis.appserver.AppServerApplication;
 import com.labis.appserver.model.Espacio;
-import com.labis.appserver.model.PersonalMantenimiento;
 import com.labis.appserver.service.EspacioService;
 import com.labis.appserver.service.IncidenciaService;
 import com.labis.appserver.service.PersonaService;
 import com.labis.appserver.service.PersonalMantenimientoService;
-import com.labis.appserver.service.UsuarioService;
-import com.labis.appserver.valueObject.Incidencia;
 import net.minidev.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,11 +46,7 @@ public class Receiver {
             case STRING_LOGIN:
                 String email = message.remove(0);
                 String contrasena = message.remove(0);
-                int tipoLogin = personaService.loginPersona(email, contrasena);
-                if (tipoLogin == TIPO_USUARIO_NO_EXISTE) {
-                    log.info(email + " intento de login fallido");
-                }
-                return Integer.toString(tipoLogin);
+                return personaService.loginPersona(email, contrasena).toJSONString();
 
             case STRING_REGISTRO:
                 email = message.remove(0);

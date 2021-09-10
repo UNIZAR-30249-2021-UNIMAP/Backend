@@ -1,31 +1,33 @@
 package com.labis.appserver.service;
 
 import com.labis.appserver.model.Espacio;
+import com.labis.appserver.model.Persona;
 import com.labis.appserver.model.Reserva;
-import com.labis.appserver.model.Usuario;
 import com.labis.appserver.repository.EspacioRepository;
 import com.labis.appserver.repository.PeriodoDeReservaRepository;
+import com.labis.appserver.repository.PersonaRepository;
 import com.labis.appserver.repository.ReservaRepository;
-import com.labis.appserver.repository.UsuarioRepository;
 import com.labis.appserver.valueObject.PeriodoDeReserva;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 
+@Service
 public class EspacioService {
 
     private final EspacioRepository espacioRepository;
     private final ReservaRepository reservaRepository;
     private final PeriodoDeReservaRepository periodoDeReservaRepository;
-    private final UsuarioRepository usuarioRepository;
+    private final PersonaRepository personaRepository;
 
     public EspacioService(EspacioRepository espacioRepo, ReservaRepository reservaRepo,
-                          PeriodoDeReservaRepository periodoRepo, UsuarioRepository usuarioRepo) {
+                          PeriodoDeReservaRepository periodoRepo, PersonaRepository personaRepo) {
         this.espacioRepository = espacioRepo;
         this.reservaRepository = reservaRepo;
         this.periodoDeReservaRepository = periodoRepo;
-        this.usuarioRepository = usuarioRepo;
+        this.personaRepository = personaRepo;
     }
 
     public Optional<Espacio> findById(long idEspacio) { return this.espacioRepository.findById(idEspacio); }
@@ -56,9 +58,9 @@ public class EspacioService {
         Optional<Espacio> espacioOptional = this.espacioRepository.findById(idSala);
         if (espacioOptional.isPresent()) {
             Espacio espacio = espacioOptional.get();
-            Optional<Usuario> usuarioOptional = Optional.ofNullable(this.usuarioRepository.findByEmail(nombreUsuario));
-            if (usuarioOptional.isPresent()) {
-                Usuario usuario = usuarioOptional.get();
+            Optional<Persona> personaOptional = Optional.ofNullable(this.personaRepository.findByEmail(nombreUsuario));
+            if (personaOptional.isPresent()) {
+                Persona persona = personaOptional.get();
                 Calendar calendarDesde = Calendar.getInstance();
                 calendarDesde.setTimeInMillis(fechaInicio.getTime());
                 Calendar calendarHasta = Calendar.getInstance();
@@ -71,7 +73,7 @@ public class EspacioService {
                                             calendarHasta.get(Calendar.MINUTE), 0, 0);
                 PeriodoDeReserva periodo = new PeriodoDeReserva(dia, horaInicio, horaFin);
                 this.periodoDeReservaRepository.save(periodo);
-                Reserva reserva = new Reserva(espacio, usuario, periodo);
+                Reserva reserva = new Reserva(espacio, persona, periodo);
                 this.reservaRepository.save(reserva);
                 espacio.anyadirReserva(reserva);
                 this.espacioRepository.save(espacio);

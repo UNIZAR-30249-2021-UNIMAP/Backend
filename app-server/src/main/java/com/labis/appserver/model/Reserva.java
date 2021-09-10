@@ -17,7 +17,7 @@ public class Reserva {
     private Espacio espacio;
 
     @ManyToOne
-    private Usuario reservadoPor;
+    private Persona reservadoPor;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="periodo_id", referencedColumnName = "id")
@@ -26,7 +26,7 @@ public class Reserva {
 
     public Reserva(){}
 
-    public Reserva(Espacio espacioReservado, Usuario quienReserva, PeriodoDeReserva cuando) {
+    public Reserva(Espacio espacioReservado, Persona quienReserva, PeriodoDeReserva cuando) {
         this.espacio = espacioReservado;
         this.reservadoPor = quienReserva;
         this.periodoDeReserva = cuando;

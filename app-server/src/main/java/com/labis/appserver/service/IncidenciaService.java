@@ -88,7 +88,7 @@ public class IncidenciaService {
     private boolean rechazarIncidencia(Incidencia incidencia, String motivo) {
         incidencia.rechazar(motivo);
         //TODO: Descomentar cuando se ponga el correo en application.yml
-        //enviarEmail(incidencia.getDescripcion(), incidencia.getEmail(), motivo);
+        enviarEmail(incidencia.getDescripcion(), incidencia.getEmail(), motivo);
         return true;
     }
 
@@ -112,7 +112,7 @@ public class IncidenciaService {
             Incidencia incidencia = incidenciaOptional.get();
             incidencia.finalizar();
             //TODO: Descomentar cuando se ponga el correo en application.yml
-            //enviarEmail(incidencia.getDescripcion(), incidencia.getEmail());
+            enviarEmail(incidencia.getDescripcion(), incidencia.getEmail());
             incidenciaRepository.save(incidencia);
         }
     }
