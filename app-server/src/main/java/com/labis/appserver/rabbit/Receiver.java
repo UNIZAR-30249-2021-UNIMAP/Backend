@@ -114,9 +114,19 @@ public class Receiver {
                 return personalMantenimientoService.listaOcupacionPersonal().toJSONString();
 
             case STRING_ESPACIO:
-                if (message.size() <= 1) {
-                    Long idSala = Long.parseLong(message.remove(0));
-                    Optional<Espacio> espacio = espacioService.findById(idSala);
+                if (message.size() == 2) {
+                    String edificio = message.remove(0);
+                    String idEdificio = "";
+                    if ( edificio.contains("ada")) {
+                        idEdificio = "CRE.1200.";
+                    } else if ( edificio.contains("torres")) {
+                        idEdificio = "CRE.1065.";
+                    } else {
+                        // betan
+                        idEdificio = "CRE.1201";
+                    }
+                    String idSala = idEdificio + message.remove(0);
+                    Optional<Espacio> espacio = espacioService.findByIdEspacio(idSala);
                     if (espacio.isPresent()) {
                         List<Espacio> espacioToJson = (List<Espacio>) espacio.get();
                         return JSONArray.toJSONString(espacioToJson);
@@ -125,7 +135,17 @@ public class Receiver {
                     }
                 }
                 else {
-                    Long idSala = Long.parseLong(message.remove(0));
+                    String edificio = message.remove(0);
+                    String idEdificio = "";
+                    if ( edificio.contains("ada")) {
+                        idEdificio = "CRE.1200.";
+                    } else if ( edificio.contains("torres")) {
+                        idEdificio = "CRE.1065.";
+                    } else {
+                        // betan
+                        idEdificio = "CRE.1201";
+                    }
+                    String idSala = idEdificio + message.remove(0);
                     String nombreUsuario = message.remove(0);
                     SimpleDateFormat formateador = new SimpleDateFormat( "E MMM dd yyyy HH:mm:ss zz (zzzz)");
                     try {
@@ -150,16 +170,8 @@ public class Receiver {
                 // Listado de espacios filtrado
                 String aux = message.remove(0);
                 Long aforoMinimo = null;
-                if ( !aux.isEmpty() ) {
-                    aforoMinimo = Long.parseLong(aux);
-                }
                 boolean proyector = message.remove(0).equals("true");
                 String edificio = message.remove(0);
-                Integer planta = null;
-                aux = message.remove(0);
-                if ( !aux.isEmpty() ) {
-                    planta = Integer.parseInt(aux);
-                }
                 String tipoSala = message.remove(0);
                 SimpleDateFormat formateador = new SimpleDateFormat( "E MMM dd yyyy HH:mm:ss zz (zzzz)");
                 try {
@@ -173,7 +185,7 @@ public class Receiver {
                     if ( !aux.isEmpty() ) {
                         fechaFin = formateador.parse(message.remove(0));
                     }
-                    return JSONArray.toJSONString(this.espacioService.getEspaciosParametrizados(aforoMinimo, proyector, edificio, planta, tipoSala, fechaInicio, fechaFin));
+                    return JSONArray.toJSONString(this.espacioService.getEspaciosParametrizados(proyector, edificio, tipoSala, fechaInicio, fechaFin));
                 }
                 catch (Exception e) {
                     return STRING_STATUS_ERROR;

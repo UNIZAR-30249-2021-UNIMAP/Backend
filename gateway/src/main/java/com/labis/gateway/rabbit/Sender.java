@@ -146,15 +146,20 @@ public class Sender {
         return response;
     }
 
+    @ApiOperation(value = "Devuelve los espacios que cumplen con los parámetros")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "{\"tareasNormales\":[{\"id\":,\"estado\":,\"prioridad\":}]," +
+                    "\"tareasUrgentes\":[{\"id\":,\"estado\":,\"prioridad\":}]}")
+    })
     @GetMapping(value = STRING_ESPACIOS)
-    public String getEspaciosParametrizados(@RequestParam("aforoMinimo") String aforoMinimo, @RequestParam("proyector") String proyector,
+    public String getEspaciosParametrizados(@RequestParam("proyector") String proyector,
      @RequestParam("edificio") String edificio, @RequestParam("planta") String planta,
      @RequestParam("tipoSala") String tipoSala,@RequestParam("fechaInicio") String fechaInicio, 
      @RequestParam("fechaFin") String fechaFin, @RequestParam("horaInicio") String horaInicio, 
      @RequestParam("horaFin") String horaFin) {
         ArrayList<String> espacio = new ArrayList<String>();
         espacio.add(STRING_ESPACIOS);
-        espacio.add(aforoMinimo); espacio.add(proyector); espacio.add(edificio); espacio.add(planta);
+        espacio.add(proyector); espacio.add(edificio); espacio.add(planta);
         espacio.add(tipoSala); espacio.add(fechaInicio); espacio.add(fechaFin);
 
         String response = (String) template.convertSendAndReceive(directExchangeName, "rpc", espacio);
@@ -162,22 +167,28 @@ public class Sender {
         return response;
     }
 
+    @ApiOperation(value = "Devuelve las incidencias asignadas a un empleado")
+    @ApiResponse(code = 200, message = "OK")
     @PostMapping(value = STRING_ESPACIO)
-    public String reservaEspacio( @RequestParam("idSala") String idSala, @RequestParam("nombreUsuario") String nombreUsuario,
-     @RequestParam("fechaInicio") String fechaInicio, @RequestParam("fechaFin") String fechaFin,
-     @RequestParam("semanal") String semanal) {
+    public String reservaEspacio( @RequestParam("edificio") String edificio, @RequestParam("idSala") String idSala, @RequestParam("nombreUsuario") String nombreUsuario,
+     @RequestParam("fechaInicio") String fechaInicio, @RequestParam("fechaFin") String fechaFin) {
         ArrayList<String> reserva = new ArrayList<String>();
         reserva.add(STRING_ESPACIO);
+        reserva.add(edificio);
         reserva.add(idSala); reserva.add(nombreUsuario); reserva.add(fechaInicio); reserva.add(fechaFin);
-        reserva.add(semanal);
         
         String response = (String) template.convertSendAndReceive(directExchangeName, "rpc", reserva);
         System.out.println("Received in 'gateway/Sender' <" + response + ">");
         return response;
     }
 
+    @ApiOperation(value = "Devuelve la información de un espacio dado su edificio e identificador de espacio")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "{\"tareasNormales\":[{\"id\":,\"estado\":,\"prioridad\":}]," +
+                    "\"tareasUrgentes\":[{\"id\":,\"estado\":,\"prioridad\":}]}")
+    })
     @GetMapping(value = STRING_ESPACIO)
-    public String getInfoEspacio(@RequestParam("idSala") String idSala) {
+    public String getInfoEspacio(@RequestParam("edificio") String edificio, @RequestParam("idSala") String idSala) {
         ArrayList<String> espacio = new ArrayList<String>();
         espacio.add(STRING_ESPACIO); espacio.add(idSala); //TODO revisar
 
