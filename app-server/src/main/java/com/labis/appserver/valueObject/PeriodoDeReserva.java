@@ -7,11 +7,11 @@ import java.time.LocalTime;
 @Embeddable
 public class PeriodoDeReserva {
 
-    private LocalDate dia;
+    public LocalDate dia;
 
-    private LocalTime horaInicio;
+    public LocalTime horaInicio;
 
-    private LocalTime horaFin;
+    public LocalTime horaFin;
 
     public PeriodoDeReserva() {
     }
@@ -20,14 +20,6 @@ public class PeriodoDeReserva {
         this.dia = diaReserva;
         this.horaInicio = horaPrincipio;
         this.horaFin = horaFinal;
-    }
-
-    public LocalDate getDia() {
-        return this.dia;
-    }
-
-    public LocalTime getHoraInicio() {
-        return this.horaInicio;
     }
 
     @Override

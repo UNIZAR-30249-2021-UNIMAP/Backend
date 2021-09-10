@@ -32,11 +32,11 @@ public class Reserva {
     }
 
     public LocalDate getDiaReserva() {
-        return this.periodoDeReserva.getDia();
+        return this.periodoDeReserva.dia;
     }
 
     public LocalTime getHoraInicio() {
-        return this.periodoDeReserva.getHoraInicio();
+        return this.periodoDeReserva.horaInicio;
     }
 
     public LocalTime getHoraFin() {
