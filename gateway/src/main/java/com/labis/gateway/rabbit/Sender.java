@@ -27,6 +27,7 @@ public class Sender {
     })
     @PostMapping(value = STRING_LOGIN)
     public String login(@RequestParam(value="email") String email, @RequestParam(value="contrasena") String contrasena) {
+        System.out.println("Values: " +email +" " +contrasena);
         ArrayList<String> infoUser = new ArrayList<String>();
         infoUser.add(STRING_LOGIN);
         infoUser.add(email);
@@ -154,8 +155,7 @@ public class Sender {
         ArrayList<String> espacio = new ArrayList<String>();
         espacio.add(STRING_ESPACIOS);
         espacio.add(aforoMinimo); espacio.add(proyector); espacio.add(edificio); espacio.add(planta);
-        espacio.add(tipoSala); espacio.add(fechaInicio); espacio.add(fechaFin); espacio.add(horaInicio);
-        espacio.add(horaFin);
+        espacio.add(tipoSala); espacio.add(fechaInicio); espacio.add(fechaFin);
 
         String response = (String) template.convertSendAndReceive(directExchangeName, "rpc", espacio);
         System.out.println("Received in 'gateway/Sender' <" + response + ">");
@@ -165,13 +165,11 @@ public class Sender {
     @PostMapping(value = STRING_ESPACIO)
     public String reservaEspacio( @RequestParam("idSala") String idSala, @RequestParam("nombreUsuario") String nombreUsuario,
      @RequestParam("fechaInicio") String fechaInicio, @RequestParam("fechaFin") String fechaFin,
-     @RequestParam("horaInicio") String horaInicio, @RequestParam("horaFin") String horaFin,
-     @RequestParam("semanal") String semanal, @RequestParam("email") String email,
-     @RequestParam("telefono") String telefono) {
+     @RequestParam("semanal") String semanal) {
         ArrayList<String> reserva = new ArrayList<String>();
         reserva.add(STRING_ESPACIO);
-        reserva.add(idSala); reserva.add(nombreUsuario); reserva.add(fechaInicio); reserva.add(fechaFin); 
-        reserva.add(horaInicio); reserva.add(semanal); reserva.add(email); reserva.add(telefono);
+        reserva.add(idSala); reserva.add(nombreUsuario); reserva.add(fechaInicio); reserva.add(fechaFin);
+        reserva.add(semanal);
         
         String response = (String) template.convertSendAndReceive(directExchangeName, "rpc", reserva);
         System.out.println("Received in 'gateway/Sender' <" + response + ">");

@@ -1,9 +1,15 @@
 package com.labis.appserver.rabbit;
 
 import com.labis.appserver.AppServerApplication;
+import com.labis.appserver.model.Espacio;
+import com.labis.appserver.model.PersonalMantenimiento;
+import com.labis.appserver.service.EspacioService;
 import com.labis.appserver.service.IncidenciaService;
 import com.labis.appserver.service.PersonaService;
 import com.labis.appserver.service.PersonalMantenimientoService;
+import com.labis.appserver.service.UsuarioService;
+import com.labis.appserver.valueObject.Incidencia;
+import net.minidev.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -11,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static com.labis.appserver.common.Constantes.*;
 
@@ -28,6 +36,9 @@ public class Receiver {
 
     @Autowired
     PersonaService personaService;
+
+    @Autowired
+    EspacioService espacioService;
 
     @RabbitListener(queues = "tut.rpc.requests")
     public String receiveMessage(ArrayList<String> message) {
@@ -110,13 +121,70 @@ public class Receiver {
                 return personalMantenimientoService.listaOcupacionPersonal().toJSONString();
 
             case STRING_ESPACIO:
-                return "Espacio";
+                if (message.size() <= 1) {
+                    Long idSala = Long.parseLong(message.remove(0));
+                    Optional<Espacio> espacio = espacioService.findById(idSala);
+                    if (espacio.isPresent()) {
+                        List<Espacio> espacioToJson = (List<Espacio>) espacio.get();
+                        return JSONArray.toJSONString(espacioToJson);
+                    } else {
+                        return STRING_STATUS_ERROR;
+                    }
+                }
+                else {
+                    Long idSala = Long.parseLong(message.remove(0));
+                    String nombreUsuario = message.remove(0);
+                    SimpleDateFormat formateador = new SimpleDateFormat( "E MMM dd yyyy HH:mm:ss zz (zzzz)");
+                    try {
+                        Date fechaInicio = formateador.parse(message.remove(0));
+                        Date fechaFin = formateador.parse(message.remove(0));
+                        boolean semanal = message.remove(0).equals("true");
+                        // Reservar espacio y devolver respuesta
+                        if ( this.espacioService.reservaEspacio(idSala, nombreUsuario, fechaInicio, fechaFin, semanal)) {
+                            return STRING_STATUS_OK;
+                        }
+                        return STRING_STATUS_ERROR;
+                    }
+                    catch (Exception e) {
+                        return STRING_STATUS_ERROR;
+                    }
+                }
 
             case STRING_AFORO:
                 return "Aforo";
 
             case STRING_ESPACIOS:
-                return "Espacios";
+                // Listado de espacios filtrado
+                String aux = message.remove(0);
+                Long aforoMinimo = null;
+                if ( !aux.isEmpty() ) {
+                    aforoMinimo = Long.parseLong(aux);
+                }
+                boolean proyector = message.remove(0).equals("true");
+                String edificio = message.remove(0);
+                Integer planta = null;
+                aux = message.remove(0);
+                if ( !aux.isEmpty() ) {
+                    planta = Integer.parseInt(aux);
+                }
+                String tipoSala = message.remove(0);
+                SimpleDateFormat formateador = new SimpleDateFormat( "E MMM dd yyyy HH:mm:ss zz (zzzz)");
+                try {
+                    aux = message.remove(0);
+                    Date fechaInicio = null;
+                    if ( !aux.isEmpty() ) {
+                        fechaInicio = formateador.parse(message.remove(0));
+                    }
+                    aux = message.remove(0);
+                    Date fechaFin = null;
+                    if ( !aux.isEmpty() ) {
+                        fechaFin = formateador.parse(message.remove(0));
+                    }
+                    return JSONArray.toJSONString(this.espacioService.getEspaciosParametrizados(aforoMinimo, proyector, edificio, planta, tipoSala, fechaInicio, fechaFin));
+                }
+                catch (Exception e) {
+                    return STRING_STATUS_ERROR;
+                }
 
             case STRING_REGISTRO_MANTENIMIENTO:
                 nombre = message.remove(0);
