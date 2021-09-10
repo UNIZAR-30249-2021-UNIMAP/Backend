@@ -32,18 +32,16 @@ public class EspacioService {
 
     public Optional<Espacio> findById(long idEspacio) { return this.espacioRepository.findById(idEspacio); }
 
-    public List<Espacio> findAll() {
-        return (List<Espacio>) this.espacioRepository.findAll();
+    public Optional<Espacio> findByIdEspacio(String idEspacio) {
+        return this.espacioRepository.findByIdEspacio(idEspacio);
     }
 
-    public List<Espacio>getEspaciosParametrizados(Long aforoMin, boolean proyector, String edificio, Integer planta, String tipoDeEspacio, Date fechaInicio, Date fechaFin) {
+    public List<Espacio>getEspaciosParametrizados(boolean proyector, String edificio, String tipoDeEspacio, Date fechaInicio, Date fechaFin) {
         List<Espacio> espacios = (List<Espacio>) this.espacioRepository.findAll();
         List<Espacio> resultado = new ArrayList<Espacio>();
         espacios.forEach( espacio -> {
-            if (    (aforoMin != null && espacio.getAforoActual() >= aforoMin || aforoMin == null) &&
-                    (proyector && espacio.getProyectoresActuales() > 0 || !proyector) &&
+            if (    (proyector && espacio.getProyectoresActuales() > 0 || !proyector) &&
                     (!edificio.isEmpty() && espacio.getEdificio().equals(edificio) || edificio.isEmpty()) &&
-                    (planta != null && espacio.getPlanta() == planta || planta == null) &&
                     (!tipoDeEspacio.isEmpty() && espacio.getTipoDeEspacio().toString().equals(tipoDeEspacio) || tipoDeEspacio.isEmpty()) &&
                     this.estaLibre(fechaInicio, fechaFin, espacio.getReservas())
             ) {
@@ -53,9 +51,9 @@ public class EspacioService {
         return resultado;
     }
 
-    public boolean reservaEspacio(Long idSala, String nombreUsuario, Date fechaInicio, Date fechaFin, boolean semanal) {
+    public boolean reservaEspacio(String idSala, String nombreUsuario, Date fechaInicio, Date fechaFin, boolean semanal) {
         boolean resultado = false;
-        Optional<Espacio> espacioOptional = this.espacioRepository.findById(idSala);
+        Optional<Espacio> espacioOptional = this.espacioRepository.findByIdEspacio(idSala);
         if (espacioOptional.isPresent()) {
             Espacio espacio = espacioOptional.get();
             Optional<Persona> personaOptional = Optional.ofNullable(this.personaRepository.findByEmail(nombreUsuario));

@@ -39,7 +39,4 @@ public class Reserva {
         return this.periodoDeReserva.horaInicio;
     }
 
-    public LocalTime getHoraFin() {
-        return this.getHoraFin();
-    }
 }
