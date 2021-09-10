@@ -138,15 +138,7 @@ public class Receiver {
                 }
                 else {
                     String edificio = message.remove(0);
-                    String idEdificio = "";
-                    if ( edificio.contains("ada")) {
-                        idEdificio = "CRE.1200.";
-                    } else if ( edificio.contains("torres")) {
-                        idEdificio = "CRE.1065.";
-                    } else {
-                        // betan
-                        idEdificio = "CRE.1201";
-                    }
+                    String idEdificio = getIdEdificio(edificio);
                     String idSala = idEdificio + message.remove(0);
                     String nombreUsuario = message.remove(0);
                     SimpleDateFormat formateador = new SimpleDateFormat( "E MMM dd yyyy HH:mm:ss zz (zzzz)");
@@ -170,26 +162,27 @@ public class Receiver {
 
             case STRING_ESPACIOS:
                 // Listado de espacios filtrado
-                String aux = message.remove(0);
-                Long aforoMinimo = null;
                 boolean proyector = message.remove(0).equals("true");
                 String edificio = message.remove(0);
+                edificio = getIdEdificio(edificio);
                 String tipoSala = message.remove(0);
-                SimpleDateFormat formateador = new SimpleDateFormat( "E MMM dd yyyy HH:mm:ss zz (zzzz)");
+                SimpleDateFormat formateador = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss");
                 try {
-                    aux = message.remove(0);
+                    String fechaInicioRecibida = message.remove(0);
                     Date fechaInicio = null;
-                    if ( !aux.isEmpty() ) {
-                        fechaInicio = formateador.parse(message.remove(0));
+                    if ( !fechaInicioRecibida.isEmpty() ) {
+                        log.info("fechaInicio: " + fechaInicioRecibida);
+                        fechaInicio = formateador.parse(fechaInicioRecibida);
                     }
-                    aux = message.remove(0);
+                    String fechaFinRecibida = message.remove(0);
                     Date fechaFin = null;
-                    if ( !aux.isEmpty() ) {
-                        fechaFin = formateador.parse(message.remove(0));
+                    if ( !fechaFinRecibida.isEmpty() ) {
+                        fechaFin = formateador.parse(fechaFinRecibida);
                     }
                     return JSONArray.toJSONString(this.espacioService.getEspaciosParametrizados(proyector, edificio, tipoSala, fechaInicio, fechaFin));
                 }
                 catch (Exception e) {
+                    log.info(Arrays.toString(e.getStackTrace()));
                     return STRING_STATUS_ERROR;
                 }
 
@@ -208,6 +201,17 @@ public class Receiver {
             default:
                 return "Error";
         }
+    }
+
+    private String getIdEdificio(String edificio) {
+        if ( edificio.contains("ada")) {
+            return "CRE.1200.";
+        } else if ( edificio.contains("torres")) {
+            return "CRE.1065.";
+        } else if ( edificio.contains("betan")) {
+            return "CRE.1201.";
+        }
+        return "";
     }
 
 }

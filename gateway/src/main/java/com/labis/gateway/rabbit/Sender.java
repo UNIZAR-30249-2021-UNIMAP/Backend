@@ -153,13 +153,11 @@ public class Sender {
     })
     @GetMapping(value = STRING_ESPACIOS)
     public String getEspaciosParametrizados(@RequestParam("proyector") String proyector,
-     @RequestParam("edificio") String edificio, @RequestParam("planta") String planta,
-     @RequestParam("tipoSala") String tipoSala,@RequestParam("fechaInicio") String fechaInicio, 
-     @RequestParam("fechaFin") String fechaFin, @RequestParam("horaInicio") String horaInicio, 
-     @RequestParam("horaFin") String horaFin) {
+     @RequestParam("edificio") String edificio, @RequestParam("tipoSala") String tipoSala,
+     @RequestParam("fechaInicio") String fechaInicio, @RequestParam("fechaFin") String fechaFin) {
         ArrayList<String> espacio = new ArrayList<String>();
         espacio.add(STRING_ESPACIOS);
-        espacio.add(proyector); espacio.add(edificio); espacio.add(planta);
+        espacio.add(proyector); espacio.add(edificio);
         espacio.add(tipoSala); espacio.add(fechaInicio); espacio.add(fechaFin);
 
         String response = (String) template.convertSendAndReceive(directExchangeName, "rpc", espacio);
