@@ -1,26 +1,17 @@
 package com.labis.appserver.valueObject;
 
-import com.labis.appserver.model.Reserva;
-
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Entity
+@Embeddable
 public class PeriodoDeReserva {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
 
     private LocalDate dia;
 
     private LocalTime horaInicio;
 
     private LocalTime horaFin;
-
-    @OneToOne(mappedBy = "periodoDeReserva")
-    private Reserva reserva;
 
     public PeriodoDeReserva() {
     }
@@ -39,14 +30,9 @@ public class PeriodoDeReserva {
         return this.horaInicio;
     }
 
-    public LocalTime getHoraFin() {
-        return this.horaFin;
-    }
-
     @Override
     public String toString() {
         return "Incidencia{" +
-                "id:" + id +
                 ", dia:" + this.dia.toString() +
                 ", horaInicio:" + this.horaInicio.toString() +
                 ", horaFin" + this.horaFin.toString() +

@@ -19,8 +19,7 @@ public class Reserva {
     @ManyToOne
     private Persona reservadoPor;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="periodo_id", referencedColumnName = "id")
+    @Embedded
     private PeriodoDeReserva periodoDeReserva;
 
 
