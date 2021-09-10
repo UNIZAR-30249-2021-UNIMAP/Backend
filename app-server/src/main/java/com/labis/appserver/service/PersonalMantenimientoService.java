@@ -1,5 +1,6 @@
 package com.labis.appserver.service;
 
+import com.labis.appserver.model.Incidencia;
 import com.labis.appserver.model.PersonalMantenimiento;
 import com.labis.appserver.repository.PersonalMantenimientoRepository;
 import net.minidev.json.JSONArray;
@@ -45,11 +46,35 @@ public class PersonalMantenimientoService {
     }
 
     public JSONObject incidenciasEmpleado(long idPersonalMantenimiento) {
-        JSONObject jsonObject = new JSONObject();
+        JSONObject jsonADevolver = new JSONObject();
         PersonalMantenimiento personalMantenimiento = findById(idPersonalMantenimiento);
-        jsonObject.put("tareasNormales", personalMantenimiento.getTareasNormales());
-        jsonObject.put("tareasUrgentes", personalMantenimiento.getTareasUrgentes());
-        return jsonObject;
+        JSONArray jsonArrayNormales = new JSONArray();
+        for (Incidencia incidencia : personalMantenimiento.getTareasNormales()) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("id", incidencia.getId());
+            jsonObject.put("estado", incidencia.getEstado());
+            jsonObject.put("prioridad", incidencia.getPrioridad());
+            jsonObject.put("reportadoTimeStamp", incidencia.getReportadoTimeStamp());
+            jsonObject.put("descripcion", incidencia.getDescripcion());
+            jsonObject.put("idEspacio", incidencia.getIdEspacio());
+            jsonArrayNormales.add(jsonObject);
+        }
+
+        JSONArray jsonArrayUrgentes = new JSONArray();
+        for (Incidencia incidencia : personalMantenimiento.getTareasUrgentes()) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("id", incidencia.getId());
+            jsonObject.put("estado", incidencia.getEstado());
+            jsonObject.put("prioridad", incidencia.getPrioridad());
+            jsonObject.put("reportadoTimeStamp", incidencia.getReportadoTimeStamp());
+            jsonObject.put("descripcion", incidencia.getDescripcion());
+            jsonObject.put("idEspacio", incidencia.getIdEspacio());
+            jsonArrayUrgentes.add(jsonObject);
+        }
+        jsonADevolver.put("tareasNormales", jsonArrayNormales);
+        jsonADevolver.put("tareasUrgentes", jsonArrayUrgentes);
+
+        return jsonADevolver;
     }
 
     public boolean registrarPersonalMantenimiento(String email, String nombre, String apellidos, String contrasena) {
