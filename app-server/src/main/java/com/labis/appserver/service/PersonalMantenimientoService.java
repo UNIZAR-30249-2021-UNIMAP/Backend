@@ -30,7 +30,7 @@ public class PersonalMantenimientoService {
         return repository.findById(id).get();
     }
 
-    public JSONArray listaOcupacionPersonal() {
+    public JSONArray listaOcupacionPersonalMantenimiento() {
         JSONArray jsonArray = new JSONArray();
         Iterable<PersonalMantenimiento> personalMantenimientoIterable = repository.findAll();
 
@@ -45,7 +45,7 @@ public class PersonalMantenimientoService {
         return jsonArray;
     }
 
-    public JSONObject incidenciasEmpleado(long idPersonalMantenimiento) {
+    public JSONObject incidenciasPersonalMantenimiento(long idPersonalMantenimiento) {
         JSONObject jsonADevolver = new JSONObject();
         PersonalMantenimiento personalMantenimiento = findById(idPersonalMantenimiento);
         JSONArray jsonArrayNormales = new JSONArray();

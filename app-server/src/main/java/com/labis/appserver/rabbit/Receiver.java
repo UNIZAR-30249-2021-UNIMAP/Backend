@@ -78,7 +78,7 @@ public class Receiver {
                 if (tipoPeticion.equals("GET")) {
                     // Get: Incidencias de un empleado
                     long idPersonalMantenimiento = Long.parseLong(message.remove(0));
-                    return personalMantenimientoService.incidenciasEmpleado(idPersonalMantenimiento).toJSONString();
+                    return personalMantenimientoService.incidenciasPersonalMantenimiento(idPersonalMantenimiento).toJSONString();
                 } else if (tipoPeticion.equals("POST")) {
                     //Post: finalizar incidencia
                     long IdIncidencia = Long.parseLong(message.remove(0));
@@ -111,7 +111,7 @@ public class Receiver {
 
             case STRING_MANTENIMIENTO:
                 //lista de empleados
-                return personalMantenimientoService.listaOcupacionPersonal().toJSONString();
+                return personalMantenimientoService.listaOcupacionPersonalMantenimiento().toJSONString();
 
             case STRING_ESPACIO:
                 if (message.size() == 2) {
