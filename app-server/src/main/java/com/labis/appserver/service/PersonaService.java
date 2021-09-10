@@ -17,6 +17,7 @@ public class PersonaService {
     }
 
 
+    //Registra un usuario normal creándolo en la base de datos
     public boolean registrarPersona(String email, String nombre, String contrasena) {
         if (repository.existsByEmail(email)) {
             return false;
@@ -27,6 +28,7 @@ public class PersonaService {
         }
     }
 
+    //Comprueba que una persona está registrada en la base de datos y devuelve un JSON con su ID y el tipo de usuario
     public JSONObject loginPersona(String email, String contrasena) {
         boolean existePersona = repository.existsByEmailAndContrasena(email, contrasena);
         JSONObject jsonObject = new JSONObject();
@@ -41,6 +43,7 @@ public class PersonaService {
         return jsonObject;
     }
 
+    //Comprueba si existe una persona registrada en la base de datos
     public boolean existePersona(String email) {
         return repository.existsByEmail(email);
     }

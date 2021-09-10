@@ -61,7 +61,7 @@ public class Receiver {
                 }
 
             case STRING_INCIDENCIA:
-                return incidenciaService.informeTodasIncidencias().toJSONString();
+                return incidenciaService.informeTodasIncidenciasReportadas().toJSONString();
 
             case STRING_INCIDENCIA_REPORTE:
                 String idEspacio = message.remove(0);

@@ -34,6 +34,7 @@ public class PersonalMantenimiento extends Persona {
         this.maxNumTareasUrgentes = 1;
     }
 
+    //Asigna la incidencia con prioridad NORMAL
     public boolean anyadirIncidenciaNormal(Incidencia incidencia) {
         log.info("tamaño tareas normales: " + this.tareasNormales.size());
 
@@ -48,6 +49,7 @@ public class PersonalMantenimiento extends Persona {
         }
     }
 
+    //Asigna la incidencia con prioridad URGENTE
     public boolean anyadirIncidenciaUrgente(Incidencia incidencia){
         log.info("tamaño tareas urgentes: " + this.tareasUrgentes.size());
         if (incidencia.getEstado().equals(IssueStatus.REPORTADO.toString())
@@ -58,15 +60,6 @@ public class PersonalMantenimiento extends Persona {
             return true;
         } else  {
             return false;
-        }
-    }
-
-    public boolean finalizarIncidencia(Incidencia incidencia) {
-        incidencia.finalizar();
-        if (tareasNormales.contains(incidencia)) {
-            return tareasNormales.remove(incidencia);
-        } else {
-            return tareasUrgentes.remove(incidencia);
         }
     }
 

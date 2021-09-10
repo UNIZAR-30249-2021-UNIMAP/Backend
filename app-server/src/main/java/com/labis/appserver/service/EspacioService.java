@@ -36,15 +36,17 @@ public class EspacioService {
     public List<Espacio> recuperarEspaciosParametrizados(boolean proyector, String edificio, String tipoDeEspacio, Date fechaInicio, Date fechaFin) {
         List<Espacio> espacios = (List<Espacio>) this.espacioRepository.findAll();
         List<Espacio> resultado = new ArrayList<Espacio>();
-        espacios.forEach( espacio -> {
-            if (    (proyector && espacio.getProyectoresActuales() > 0 || !proyector) &&
-                    (!edificio.isEmpty() && espacio.getEdificio().equals(edificio) || edificio.isEmpty()) &&
-                    (!tipoDeEspacio.isEmpty() && espacio.getTipoDeEspacio().contains(tipoDeEspacio) || tipoDeEspacio.isEmpty()) &&
+        Espacio espacio;
+        for (int i = 0; i < espacios.size() && resultado.size() < 20; i++) {
+            espacio = espacios.get(i);
+            if (    (!proyector || espacio.getProyectoresActuales() > 0) &&
+                    (edificio.isEmpty() || espacio.getEdificio().equals(edificio)) &&
+                    (tipoDeEspacio.isEmpty() || espacio.getTipoDeEspacio().toString().equals(tipoDeEspacio)) &&
                     this.estaLibre(fechaInicio, fechaFin, espacio.getReservas())
             ) {
                 resultado.add(espacio);
             }
-        });
+        }
         return resultado;
     }
 
