@@ -7,6 +7,7 @@ import com.labis.appserver.service.IncidenciaService;
 import com.labis.appserver.service.PersonaService;
 import com.labis.appserver.service.PersonalMantenimientoService;
 import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -123,13 +124,14 @@ public class Receiver {
                         idEdificio = "CRE.1065.";
                     } else {
                         // betan
-                        idEdificio = "CRE.1201";
+                        idEdificio = "CRE.1201.";
                     }
                     String idSala = idEdificio + message.remove(0);
                     Optional<Espacio> espacio = espacioService.findByIdEspacio(idSala);
                     if (espacio.isPresent()) {
-                        List<Espacio> espacioToJson = (List<Espacio>) espacio.get();
-                        return JSONArray.toJSONString(espacioToJson);
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("espacio", espacio.get());
+                        return jsonObject.toJSONString();
                     } else {
                         return STRING_STATUS_ERROR;
                     }

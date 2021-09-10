@@ -1,6 +1,7 @@
 package com.labis.appserver.model;
 
 import com.labis.appserver.valueObject.PeriodoDeReserva;
+import org.apache.tomcat.jni.Local;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -25,10 +26,10 @@ public class Reserva {
 
     public Reserva(){}
 
-    public Reserva(Espacio espacioReservado, Persona quienReserva, PeriodoDeReserva cuando) {
+    public Reserva(Espacio espacioReservado, Persona quienReserva, LocalDate dia, LocalTime horaInicio, LocalTime horaFin) {
         this.espacio = espacioReservado;
         this.reservadoPor = quienReserva;
-        this.periodoDeReserva = cuando;
+        this.periodoDeReserva = new PeriodoDeReserva(dia, horaInicio, horaFin);
     }
 
     public LocalDate getDiaReserva() {

@@ -190,7 +190,7 @@ public class Sender {
     @GetMapping(value = STRING_ESPACIO)
     public String getInfoEspacio(@RequestParam("edificio") String edificio, @RequestParam("idSala") String idSala) {
         ArrayList<String> espacio = new ArrayList<String>();
-        espacio.add(STRING_ESPACIO); espacio.add(idSala); //TODO revisar
+        espacio.add(STRING_ESPACIO); espacio.add(edificio); espacio.add(idSala); //TODO revisar
 
         String response = (String) template.convertSendAndReceive(directExchangeName, "rpc", espacio);
         System.out.println("Received in 'gateway/Sender' <" + response + ">");

@@ -4,10 +4,8 @@ import com.labis.appserver.model.Espacio;
 import com.labis.appserver.model.Persona;
 import com.labis.appserver.model.Reserva;
 import com.labis.appserver.repository.EspacioRepository;
-import com.labis.appserver.repository.PeriodoDeReservaRepository;
 import com.labis.appserver.repository.PersonaRepository;
 import com.labis.appserver.repository.ReservaRepository;
-import com.labis.appserver.valueObject.PeriodoDeReserva;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -19,14 +17,12 @@ public class EspacioService {
 
     private final EspacioRepository espacioRepository;
     private final ReservaRepository reservaRepository;
-    private final PeriodoDeReservaRepository periodoDeReservaRepository;
     private final PersonaRepository personaRepository;
 
     public EspacioService(EspacioRepository espacioRepo, ReservaRepository reservaRepo,
-                          PeriodoDeReservaRepository periodoRepo, PersonaRepository personaRepo) {
+                          PersonaRepository personaRepo) {
         this.espacioRepository = espacioRepo;
         this.reservaRepository = reservaRepo;
-        this.periodoDeReservaRepository = periodoRepo;
         this.personaRepository = personaRepo;
     }
 
@@ -69,9 +65,7 @@ public class EspacioService {
                                             calendarDesde.get(Calendar.MINUTE), 0, 0);
                 LocalTime horaFin = LocalTime.of(calendarHasta.get(Calendar.HOUR_OF_DAY),
                                             calendarHasta.get(Calendar.MINUTE), 0, 0);
-                PeriodoDeReserva periodo = new PeriodoDeReserva(dia, horaInicio, horaFin);
-                this.periodoDeReservaRepository.save(periodo);
-                Reserva reserva = new Reserva(espacio, persona, periodo);
+                Reserva reserva = new Reserva(espacio, persona, dia, horaInicio, horaFin);
                 this.reservaRepository.save(reserva);
                 espacio.anyadirReserva(reserva);
                 this.espacioRepository.save(espacio);
