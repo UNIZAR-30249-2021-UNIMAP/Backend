@@ -42,12 +42,14 @@ public class Incidencia {
         this.idEspacio = idEspacio;
     }
 
+    //Marca una incidencia como rechazada junto con su motivo
     public void rechazar(String motivo) {
         this.estado = IssueStatus.RECHAZADA.toString();
         this.finalizadoTimeStamp = Timestamp.from(Instant.now());
         this.motivoRechazo = motivo;
     }
 
+    //Asigna la incidencia a un personal de mantenimiento con prioridad NORMAL
     public void asignarPrioridadNormal(PersonalMantenimiento personalMantenimiento) {
         this.personalMantenimientoNormal = personalMantenimiento;
         this.estado = IssueStatus.PENDIENTE.toString();
@@ -55,6 +57,7 @@ public class Incidencia {
         this.asignadoTimeStamp = Timestamp.from(Instant.now());
     }
 
+    //Asigna la incidencia a un personal de mantenimiento con prioridad URGENTE
     public void asignarPrioridadUrgente(PersonalMantenimiento personalMantenimiento) {
         this.personalMantenimientoUrgente = personalMantenimiento;
         this.estado = IssueStatus.PENDIENTE.toString();
@@ -62,6 +65,7 @@ public class Incidencia {
         this.asignadoTimeStamp = Timestamp.from(Instant.now());
     }
 
+    //Finaliza una incidencia desasignandola del personal de mantenimiento
     public void finalizar() {
         this.estado = IssueStatus.FINALIZADA.toString();
         this.finalizadoTimeStamp = Timestamp.from(Instant.now());

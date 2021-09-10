@@ -20,15 +20,6 @@ public class Persona {
 
     public Persona() {}
 
-    public Persona(String email, String nombre, String apellidos, String contrasena) {
-        this.email = email;
-        this.nombre = nombre;
-        this.apellidos = apellidos;
-        this.contrasena = contrasena;
-        this.tipoUsuario = TIPO_NORMAL;
-    }
-
-    //Mediante registro, es posible que no se soliciten apellidos
     public Persona(String email, String nombre, String contrasena) {
         this.email = email;
         this.nombre = nombre;
@@ -40,7 +31,7 @@ public class Persona {
     public Persona(String email, String nombre, String apellidos, String contrasena, int tipoUsuario) {
         this.email = email;
         this.nombre = nombre;
-        this.apellidos = "";
+        this.apellidos = apellidos;
         this.contrasena = contrasena;
         this.tipoUsuario = tipoUsuario;
     }

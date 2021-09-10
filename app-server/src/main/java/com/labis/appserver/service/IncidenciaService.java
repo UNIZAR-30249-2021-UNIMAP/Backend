@@ -41,11 +41,8 @@ public class IncidenciaService {
 
     private static final Logger log = LoggerFactory.getLogger(AppServerApplication.class);
 
-    public List<Incidencia> findAll() {
-        return (List<Incidencia>) incidenciaRepository.findAll();
-    }
-
-    public JSONArray informeTodasIncidencias() {
+    //Devuelve un JSON con la información referente a todas las incidencias con estado REPORTADO
+    public JSONArray informeTodasIncidenciasReportadas() {
         JSONArray jsonArray = new JSONArray();
         Iterable<Incidencia> incidencias = incidenciaRepository.findAllByEstado(REPORTADO.toString());
         for (Incidencia incidencia : incidencias) {
@@ -61,11 +58,13 @@ public class IncidenciaService {
         return jsonArray;
     }
 
+    //Reporta una incidencia creandola en la base de datos
     public void reportarIncidencia(String idEspacio, String descripcion, String email, String imagen) {
         Incidencia incidencia = new Incidencia(idEspacio, descripcion, email, imagen);
         incidenciaRepository.save(incidencia);
     }
 
+    //Comprueba si debe aceptar o rechazar una incidencia y realiza las operaciones necesarias para que lleve a cabo
     public boolean aceptarORechazarIncidencia(long idIncidencia, boolean aceptar, long idEmpleado, 
                                               String prioridad, String motivo) {
         boolean resultado = false;
@@ -85,6 +84,7 @@ public class IncidenciaService {
         return resultado;
     }
 
+    //Rechaza una incidencia indicando el motivo por el que se ha hecho
     private boolean rechazarIncidencia(Incidencia incidencia, String motivo) {
         incidencia.rechazar(motivo);
         //TODO: Descomentar cuando se ponga el correo en application.yml

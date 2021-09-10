@@ -1,13 +1,11 @@
 package com.labis.appserver.rabbit;
 
 import com.labis.appserver.AppServerApplication;
-import com.labis.appserver.model.Espacio;
 import com.labis.appserver.service.EspacioService;
 import com.labis.appserver.service.IncidenciaService;
 import com.labis.appserver.service.PersonaService;
 import com.labis.appserver.service.PersonalMantenimientoService;
 import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -63,7 +61,7 @@ public class Receiver {
                 }
 
             case STRING_INCIDENCIA:
-                return incidenciaService.informeTodasIncidencias().toJSONString();
+                return incidenciaService.informeTodasIncidenciasReportadas().toJSONString();
 
             case STRING_INCIDENCIA_REPORTE:
                 String idEspacio = message.remove(0);

@@ -22,14 +22,11 @@ public class PersonalMantenimientoService {
         this.repository = repo;
     }
 
-    public List<PersonalMantenimiento> findAll() {
-        return (List<PersonalMantenimiento>) this.repository.findAll();
-    }
-
     public PersonalMantenimiento findById(long id) {
         return repository.findById(id).get();
     }
 
+    //Devuelve una lista de los personales de mantenimiento junto a sus tareas asignadas
     public JSONArray listaOcupacionPersonalMantenimiento() {
         JSONArray jsonArray = new JSONArray();
         Iterable<PersonalMantenimiento> personalMantenimientoIterable = repository.findAll();
@@ -45,6 +42,7 @@ public class PersonalMantenimientoService {
         return jsonArray;
     }
 
+    //Devuelve un JSON con las incidencias asignadas a un personal de mantenimiento concreto
     public JSONObject incidenciasPersonalMantenimiento(long idPersonalMantenimiento) {
         JSONObject jsonADevolver = new JSONObject();
         PersonalMantenimiento personalMantenimiento = findById(idPersonalMantenimiento);
@@ -77,6 +75,7 @@ public class PersonalMantenimientoService {
         return jsonADevolver;
     }
 
+    //Registra un nuevo usuario de tipo personal Mantenimiento
     public boolean registrarPersonalMantenimiento(String email, String nombre, String apellidos, String contrasena) {
         if (personaService.existePersona(email)) {
             return false;
