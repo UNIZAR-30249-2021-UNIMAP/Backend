@@ -153,12 +153,12 @@ public class Sender {
     })
     @GetMapping(value = STRING_ESPACIOS)
     public String getEspaciosParametrizados(@RequestParam("proyector") String proyector,
-     @RequestParam("edificio") String edificio, @RequestParam("tipoSala") String tipoSala,
+     @RequestParam("edificio") String edificio, @RequestParam("tipoEspacio") String tipoEspacio,
      @RequestParam("fechaInicio") String fechaInicio, @RequestParam("fechaFin") String fechaFin) {
         ArrayList<String> espacio = new ArrayList<String>();
         espacio.add(STRING_ESPACIOS);
         espacio.add(proyector); espacio.add(edificio);
-        espacio.add(tipoSala); espacio.add(fechaInicio); espacio.add(fechaFin);
+        espacio.add(tipoEspacio); espacio.add(fechaInicio); espacio.add(fechaFin);
 
         String response = (String) template.convertSendAndReceive(directExchangeName, "rpc", espacio);
         System.out.println("Received in 'gateway/Sender' <" + response + ">");
@@ -168,12 +168,13 @@ public class Sender {
     @ApiOperation(value = "Devuelve las incidencias asignadas a un empleado")
     @ApiResponse(code = 200, message = "OK")
     @PostMapping(value = STRING_ESPACIO)
-    public String reservaEspacio( @RequestParam("edificio") String edificio, @RequestParam("idSala") String idSala, @RequestParam("nombreUsuario") String nombreUsuario,
+    public String reservaEspacio( @RequestParam("edificio") String edificio, @RequestParam("idEspacio") String idEspacio,
+                                  @RequestParam("email") String email,
      @RequestParam("fechaInicio") String fechaInicio, @RequestParam("fechaFin") String fechaFin) {
         ArrayList<String> reserva = new ArrayList<String>();
         reserva.add(STRING_ESPACIO);
         reserva.add(edificio);
-        reserva.add(idSala); reserva.add(nombreUsuario); reserva.add(fechaInicio); reserva.add(fechaFin);
+        reserva.add(idEspacio); reserva.add(email); reserva.add(fechaInicio); reserva.add(fechaFin);
         
         String response = (String) template.convertSendAndReceive(directExchangeName, "rpc", reserva);
         System.out.println("Received in 'gateway/Sender' <" + response + ">");
@@ -186,9 +187,9 @@ public class Sender {
                     "\"tareasUrgentes\":[{\"id\":,\"estado\":,\"prioridad\":}]}")
     })
     @GetMapping(value = STRING_ESPACIO)
-    public String getInfoEspacio(@RequestParam("edificio") String edificio, @RequestParam("idSala") String idSala) {
+    public String getInfoEspacio(@RequestParam("edificio") String edificio, @RequestParam("idEspacio") String idEspacio) {
         ArrayList<String> espacio = new ArrayList<String>();
-        espacio.add(STRING_ESPACIO); espacio.add(edificio); espacio.add(idSala); //TODO revisar
+        espacio.add(STRING_ESPACIO); espacio.add(edificio); espacio.add(idEspacio); //TODO revisar
 
         String response = (String) template.convertSendAndReceive(directExchangeName, "rpc", espacio);
         System.out.println("Received in 'gateway/Sender' <" + response + ">");

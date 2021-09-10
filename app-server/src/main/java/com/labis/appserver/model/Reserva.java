@@ -33,11 +33,14 @@ public class Reserva {
     }
 
     public LocalDate getDiaReserva() {
-        return this.periodoDeReserva.dia;
+        return periodoDeReserva.dia;
     }
 
     public LocalTime getHoraInicio() {
-        return this.periodoDeReserva.horaInicio;
+        return periodoDeReserva.horaInicio;
     }
+    public LocalTime getHoraFin() { return periodoDeReserva.horaFin; }
+
+    public Long getId() { return  id; }
 
 }

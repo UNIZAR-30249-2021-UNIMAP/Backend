@@ -117,42 +117,28 @@ public class Receiver {
             case STRING_ESPACIO:
                 if (message.size() == 2) {
                     String edificio = message.remove(0);
-                    String idEdificio = "";
-                    if ( edificio.contains("ada")) {
-                        idEdificio = "CRE.1200.";
-                    } else if ( edificio.contains("torres")) {
-                        idEdificio = "CRE.1065.";
-                    } else {
-                        // betan
-                        idEdificio = "CRE.1201.";
-                    }
-                    String idSala = idEdificio + message.remove(0);
-                    Optional<Espacio> espacio = espacioService.findByIdEspacio(idSala);
-                    if (espacio.isPresent()) {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("espacio", espacio.get());
-                        return jsonObject.toJSONString();
-                    } else {
-                        return STRING_STATUS_ERROR;
-                    }
+                    String idEdificio = getIdEdificio(edificio);
+                    idEspacio = idEdificio + message.remove(0);
+                    return espacioService.consultarInformacionEspacio(idEspacio).toJSONString();
                 }
                 else {
                     String edificio = message.remove(0);
                     String idEdificio = getIdEdificio(edificio);
-                    String idSala = idEdificio + message.remove(0);
-                    String nombreUsuario = message.remove(0);
-                    SimpleDateFormat formateador = new SimpleDateFormat( "E MMM dd yyyy HH:mm:ss zz (zzzz)");
+                    idEspacio = idEdificio + message.remove(0);
+                    log.info("idEspacio: " + idEspacio);
+                    email = message.remove(0);
+                    SimpleDateFormat formateador = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss");
                     try {
                         Date fechaInicio = formateador.parse(message.remove(0));
                         Date fechaFin = formateador.parse(message.remove(0));
-                        boolean semanal = message.remove(0).equals("true");
                         // Reservar espacio y devolver respuesta
-                        if ( this.espacioService.reservaEspacio(idSala, nombreUsuario, fechaInicio, fechaFin, semanal)) {
+                        if ( espacioService.reservaEspacio(idEspacio, email, fechaInicio, fechaFin)) {
                             return STRING_STATUS_OK;
                         }
                         return STRING_STATUS_ERROR;
                     }
                     catch (Exception e) {
+                        log.info(e.getMessage());
                         return STRING_STATUS_ERROR;
                     }
                 }
@@ -165,7 +151,7 @@ public class Receiver {
                 boolean proyector = message.remove(0).equals("true");
                 String edificio = message.remove(0);
                 edificio = getIdEdificio(edificio);
-                String tipoSala = message.remove(0);
+                String tipoEspacio = message.remove(0);
                 SimpleDateFormat formateador = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss");
                 try {
                     String fechaInicioRecibida = message.remove(0);
@@ -179,7 +165,7 @@ public class Receiver {
                     if ( !fechaFinRecibida.isEmpty() ) {
                         fechaFin = formateador.parse(fechaFinRecibida);
                     }
-                    return JSONArray.toJSONString(this.espacioService.getEspaciosParametrizados(proyector, edificio, tipoSala, fechaInicio, fechaFin));
+                    return JSONArray.toJSONString(this.espacioService.getEspaciosParametrizados(proyector, edificio, tipoEspacio, fechaInicio, fechaFin));
                 }
                 catch (Exception e) {
                     log.info(Arrays.toString(e.getStackTrace()));

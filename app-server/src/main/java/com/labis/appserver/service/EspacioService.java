@@ -1,11 +1,16 @@
 package com.labis.appserver.service;
 
+import com.labis.appserver.AppServerApplication;
 import com.labis.appserver.model.Espacio;
 import com.labis.appserver.model.Persona;
 import com.labis.appserver.model.Reserva;
 import com.labis.appserver.repository.EspacioRepository;
 import com.labis.appserver.repository.PersonaRepository;
 import com.labis.appserver.repository.ReservaRepository;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -14,6 +19,7 @@ import java.util.*;
 
 @Service
 public class EspacioService {
+    private static final Logger log = LoggerFactory.getLogger(AppServerApplication.class);
 
     private final EspacioRepository espacioRepository;
     private final ReservaRepository reservaRepository;
@@ -47,13 +53,15 @@ public class EspacioService {
         return resultado;
     }
 
-    public boolean reservaEspacio(String idSala, String nombreUsuario, Date fechaInicio, Date fechaFin, boolean semanal) {
+    public boolean reservaEspacio(String idEspacio, String email, Date fechaInicio, Date fechaFin) {
         boolean resultado = false;
-        Optional<Espacio> espacioOptional = this.espacioRepository.findByIdEspacio(idSala);
-        if (espacioOptional.isPresent()) {
+        Optional<Espacio> espacioOptional = this.espacioRepository.findByIdEspacio(idEspacio);
+        if (espacioOptional.isPresent() && estaLibre(fechaInicio, fechaFin, espacioOptional.get().getReservas())) {
+            log.info("espacioOptional");
             Espacio espacio = espacioOptional.get();
-            Optional<Persona> personaOptional = Optional.ofNullable(this.personaRepository.findByEmail(nombreUsuario));
+            Optional<Persona> personaOptional = Optional.ofNullable(this.personaRepository.findByEmail(email));
             if (personaOptional.isPresent()) {
+                log.info("personaOptional");
                 Persona persona = personaOptional.get();
                 Calendar calendarDesde = Calendar.getInstance();
                 calendarDesde.setTimeInMillis(fechaInicio.getTime());
@@ -69,10 +77,11 @@ public class EspacioService {
                 this.reservaRepository.save(reserva);
                 espacio.anyadirReserva(reserva);
                 this.espacioRepository.save(espacio);
+                log.info("previo a asignar: " + resultado);
                 resultado = true;
             }
         }
-
+        log.info("resultado devuelto: " + resultado);
         return resultado;
     }
 
@@ -107,5 +116,28 @@ public class EspacioService {
             }
         }
         return true;
+    }
+
+    public JSONObject consultarInformacionEspacio(String idEspacio) {
+        Optional<Espacio> espacioOptional = findByIdEspacio(idEspacio);
+        JSONObject jsonObject = new JSONObject();
+        if (espacioOptional.isPresent()) {
+            Iterable<Reserva> reservas = reservaRepository.findAllByEspacio(espacioOptional.get());
+            JSONArray jsonArray = new JSONArray();
+            for (Reserva reserva : reservas) {
+                log.info("hora fin: ------> " + reserva.getHoraFin().toString());
+                JSONObject jsonObjectReservas = new JSONObject();
+                jsonObjectReservas.put("id", reserva.getId());
+                jsonObjectReservas.put("diaReserva", reserva.getDiaReserva().toString());
+                jsonObjectReservas.put("horaInicia", reserva.getHoraInicio().toString());
+                jsonObjectReservas.put("horaFin", reserva.getHoraFin().toString());
+                jsonArray.add(jsonObjectReservas);
+            }
+            Espacio espacio = espacioOptional.get();
+            jsonObject.put("tipoDeEspacio", espacio.getTipoDeEspacio());
+            jsonObject.put("edificio", espacio.getEdificio());
+            jsonObject.put("reservas", jsonArray);
+        }
+        return jsonObject;
     }
 }
