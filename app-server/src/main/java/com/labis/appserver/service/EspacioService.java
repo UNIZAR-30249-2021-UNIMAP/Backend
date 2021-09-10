@@ -1,6 +1,5 @@
 package com.labis.appserver.service;
 
-import com.labis.appserver.AppServerApplication;
 import com.labis.appserver.model.Espacio;
 import com.labis.appserver.model.Persona;
 import com.labis.appserver.model.Reserva;
@@ -9,8 +8,6 @@ import com.labis.appserver.repository.PersonaRepository;
 import com.labis.appserver.repository.ReservaRepository;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -19,7 +16,6 @@ import java.util.*;
 
 @Service
 public class EspacioService {
-    private static final Logger log = LoggerFactory.getLogger(AppServerApplication.class);
 
     private final EspacioRepository espacioRepository;
     private final ReservaRepository reservaRepository;
@@ -32,19 +28,18 @@ public class EspacioService {
         this.personaRepository = personaRepo;
     }
 
-    public Optional<Espacio> findById(long idEspacio) { return this.espacioRepository.findById(idEspacio); }
-
-    public Optional<Espacio> findByIdEspacio(String idEspacio) {
+    public Optional<Espacio> recuperarPorIdEspacio(String idEspacio) {
         return this.espacioRepository.findByIdEspacio(idEspacio);
     }
 
-    public List<Espacio>getEspaciosParametrizados(boolean proyector, String edificio, String tipoDeEspacio, Date fechaInicio, Date fechaFin) {
+    // Dados los parámetros pasados se devuelven los Espacios que cumplan con ellos
+    public List<Espacio> recuperarEspaciosParametrizados(boolean proyector, String edificio, String tipoDeEspacio, Date fechaInicio, Date fechaFin) {
         List<Espacio> espacios = (List<Espacio>) this.espacioRepository.findAll();
         List<Espacio> resultado = new ArrayList<Espacio>();
         espacios.forEach( espacio -> {
             if (    (proyector && espacio.getProyectoresActuales() > 0 || !proyector) &&
                     (!edificio.isEmpty() && espacio.getEdificio().equals(edificio) || edificio.isEmpty()) &&
-                    (!tipoDeEspacio.isEmpty() && espacio.getTipoDeEspacio().toString().equals(tipoDeEspacio) || tipoDeEspacio.isEmpty()) &&
+                    (!tipoDeEspacio.isEmpty() && espacio.getTipoDeEspacio().contains(tipoDeEspacio) || tipoDeEspacio.isEmpty()) &&
                     this.estaLibre(fechaInicio, fechaFin, espacio.getReservas())
             ) {
                 resultado.add(espacio);
@@ -53,42 +48,57 @@ public class EspacioService {
         return resultado;
     }
 
+    // Reserva de espacio. Si no existe el espacio, no está libre en las horas solicitadas o no hay una cuenta
+    // creada en el sistema, devuelve false
     public boolean reservaEspacio(String idEspacio, String email, Date fechaInicio, Date fechaFin) {
         boolean resultado = false;
         Optional<Espacio> espacioOptional = this.espacioRepository.findByIdEspacio(idEspacio);
         if (espacioOptional.isPresent() && estaLibre(fechaInicio, fechaFin, espacioOptional.get().getReservas())) {
-            log.info("espacioOptional");
             Espacio espacio = espacioOptional.get();
             Optional<Persona> personaOptional = Optional.ofNullable(this.personaRepository.findByEmail(email));
             if (personaOptional.isPresent()) {
-                log.info("personaOptional");
                 Persona persona = personaOptional.get();
-                Calendar calendarDesde = Calendar.getInstance();
-                calendarDesde.setTimeInMillis(fechaInicio.getTime());
-                Calendar calendarHasta = Calendar.getInstance();
-                calendarHasta.setTimeInMillis(fechaFin.getTime());
-                LocalDate dia = LocalDate.of(calendarDesde.get(Calendar.YEAR), calendarDesde.get(Calendar.MONTH),
-                                                calendarDesde.get(Calendar.DAY_OF_MONTH));
-                LocalTime horaInicio = LocalTime.of(calendarDesde.get(Calendar.HOUR_OF_DAY),
-                                            calendarDesde.get(Calendar.MINUTE), 0, 0);
-                LocalTime horaFin = LocalTime.of(calendarHasta.get(Calendar.HOUR_OF_DAY),
-                                            calendarHasta.get(Calendar.MINUTE), 0, 0);
+                LocalDate dia = obtenerDiaDeObjetoDate(fechaInicio);
+                LocalTime horaInicio = obtenerHoraDeObjetoDate(fechaInicio);
+                LocalTime horaFin = obtenerHoraDeObjetoDate(fechaFin);
                 Reserva reserva = new Reserva(espacio, persona, dia, horaInicio, horaFin);
                 this.reservaRepository.save(reserva);
                 espacio.anyadirReserva(reserva);
                 this.espacioRepository.save(espacio);
-                log.info("previo a asignar: " + resultado);
                 resultado = true;
             }
         }
-        log.info("resultado devuelto: " + resultado);
         return resultado;
+    }
+
+    // Permite construir un objeto JSON apto que devolver cuando se solicita la información de un espacio
+    public JSONObject consultarInformacionEspacio(String idEspacio) {
+        Optional<Espacio> espacioOptional = recuperarPorIdEspacio(idEspacio);
+        JSONObject jsonObject = new JSONObject();
+        if (espacioOptional.isPresent()) {
+            Iterable<Reserva> reservas = reservaRepository.findAllByEspacio(espacioOptional.get());
+            JSONArray jsonArray = new JSONArray();
+            for (Reserva reserva : reservas) {
+                JSONObject jsonObjectReservas = new JSONObject();
+                jsonObjectReservas.put("id", reserva.getId());
+                jsonObjectReservas.put("diaReserva", reserva.getDiaReserva().toString());
+                jsonObjectReservas.put("horaInicia", reserva.getHoraInicio().toString());
+                jsonObjectReservas.put("horaFin", reserva.getHoraFin().toString());
+                jsonArray.add(jsonObjectReservas);
+            }
+            Espacio espacio = espacioOptional.get();
+            jsonObject.put("tipoDeEspacio", espacio.getTipoDeEspacio());
+            jsonObject.put("edificio", espacio.getEdificio());
+            jsonObject.put("reservas", jsonArray);
+        }
+        return jsonObject;
     }
 
     private boolean estaLibre(Date desde, Date hasta, Set<Reserva> reservas) {
         if (reservas.size() == 0 || desde == null && hasta == null) {
             return true;
         }
+        // Forzar esto para no usar Date de manera deprecada
         Calendar desdeCalendar = null;
         Calendar hastaCalendar = null;
         if (desde != null) {
@@ -103,41 +113,38 @@ public class EspacioService {
         Iterator<Reserva> reservaIterator = reservas.iterator();
         while(reservaIterator.hasNext()) {
             Reserva reserva = reservaIterator.next();
-            if(     desde != null && reserva.getDiaReserva().getDayOfMonth() == desdeCalendar.get(Calendar.DAY_OF_MONTH) &&
-                    reserva.getDiaReserva().getMonthValue() == desdeCalendar.get(Calendar.MONTH) &&
-                    reserva.getDiaReserva().getYear() == desdeCalendar.get(Calendar.YEAR) &&
-                    reserva.getHoraInicio().getHour() == desdeCalendar.get(Calendar.HOUR_OF_DAY)) {
-                return false;
-            } else if(     hasta != null && reserva.getDiaReserva().getDayOfMonth() == hastaCalendar.get(Calendar.DAY_OF_MONTH) &&
-                    reserva.getDiaReserva().getMonthValue() == hastaCalendar.get(Calendar.MONTH) &&
-                    reserva.getDiaReserva().getYear() == hastaCalendar.get(Calendar.YEAR) &&
-                    reserva.getHoraInicio().getHour() == hastaCalendar.get(Calendar.HOUR_OF_DAY)) {
+            if(     desde != null && estaOcupado(reserva, desdeCalendar, hastaCalendar)) {
                 return false;
             }
         }
         return true;
     }
 
-    public JSONObject consultarInformacionEspacio(String idEspacio) {
-        Optional<Espacio> espacioOptional = findByIdEspacio(idEspacio);
-        JSONObject jsonObject = new JSONObject();
-        if (espacioOptional.isPresent()) {
-            Iterable<Reserva> reservas = reservaRepository.findAllByEspacio(espacioOptional.get());
-            JSONArray jsonArray = new JSONArray();
-            for (Reserva reserva : reservas) {
-                log.info("hora fin: ------> " + reserva.getHoraFin().toString());
-                JSONObject jsonObjectReservas = new JSONObject();
-                jsonObjectReservas.put("id", reserva.getId());
-                jsonObjectReservas.put("diaReserva", reserva.getDiaReserva().toString());
-                jsonObjectReservas.put("horaInicia", reserva.getHoraInicio().toString());
-                jsonObjectReservas.put("horaFin", reserva.getHoraFin().toString());
-                jsonArray.add(jsonObjectReservas);
-            }
-            Espacio espacio = espacioOptional.get();
-            jsonObject.put("tipoDeEspacio", espacio.getTipoDeEspacio());
-            jsonObject.put("edificio", espacio.getEdificio());
-            jsonObject.put("reservas", jsonArray);
-        }
-        return jsonObject;
+    // Dada una reserva y una fecha en tipo Calendar, indica si la reserva ocupa un espacio o no
+    // Comprobamos si el intento de reserva se hace el mismo día, el mismo mes, el mismo año que una
+    // reserva existente y si la hora de la reserva existente comienza a la vez o entre las horas de inicio
+    // y fin previstas
+    private boolean estaOcupado(Reserva reserva, Calendar fechaInicio, Calendar fechaFin) {
+        return reserva.getDiaReserva().getDayOfMonth() == fechaInicio.get(Calendar.DAY_OF_MONTH) &&
+                reserva.getDiaReserva().getMonthValue() == fechaInicio.get(Calendar.MONTH) &&
+                reserva.getDiaReserva().getYear() == fechaInicio.get(Calendar.YEAR) &&
+                reserva.getHoraInicio().getHour() >= fechaInicio.get(Calendar.HOUR_OF_DAY) &&
+                reserva.getHoraInicio().getHour() < fechaFin.get(Calendar.HOUR_OF_DAY);
+    }
+
+    // Devuelve el día como LocalDate a partir de un objeto date
+    private LocalDate obtenerDiaDeObjetoDate(Date fecha) {
+        Calendar diaCalendar = Calendar.getInstance();
+        diaCalendar.setTimeInMillis(fecha.getTime());
+        return LocalDate.of(diaCalendar.get(Calendar.YEAR), diaCalendar.get(Calendar.MONTH),
+                diaCalendar.get(Calendar.DAY_OF_MONTH));
+    }
+
+    // Devuelve la hora como LocalTime a partir de un objeto
+    private LocalTime obtenerHoraDeObjetoDate(Date fecha) {
+        Calendar horaCalendar = Calendar.getInstance();
+        horaCalendar.setTimeInMillis(fecha.getTime());
+        return LocalTime.of(horaCalendar.get(Calendar.HOUR_OF_DAY),
+                horaCalendar.get(Calendar.MINUTE), 0, 0);
     }
 }
