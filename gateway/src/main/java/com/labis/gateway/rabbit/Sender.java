@@ -148,8 +148,8 @@ public class Sender {
 
     @ApiOperation(value = "Devuelve los espacios que cumplen con los parámetros")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "{\"tareasNormales\":[{\"id\":,\"estado\":,\"prioridad\":}]," +
-                    "\"tareasUrgentes\":[{\"id\":,\"estado\":,\"prioridad\":}]}")
+            @ApiResponse(code = 200, message = "Si no hay ningún error parseando la fecha devuelve: [{\"espacio\":{\"tipoDeEspacio\":\"HALL\",\"edificio\":\"CRE.1201.\",\"" +
+                    "reservas\":[]}}] . Si encuentra algún problema el mensaje será: error")
     })
     @GetMapping(value = STRING_ESPACIOS)
     public String getEspaciosParametrizados(@RequestParam("proyector") String proyector,
@@ -165,8 +165,8 @@ public class Sender {
         return response;
     }
 
-    @ApiOperation(value = "Devuelve las incidencias asignadas a un empleado")
-    @ApiResponse(code = 200, message = "OK")
+    @ApiOperation(value = "Reserva el espacio a nombre del usuario con mail email")
+    @ApiResponse(code = 200, message = "Si existe el espacio, está libre y el usuario existe será: OK. Por el contrario, el mensaje será: error")
     @PostMapping(value = STRING_ESPACIO)
     public String reservaEspacio( @RequestParam("edificio") String edificio, @RequestParam("idEspacio") String idEspacio,
                                   @RequestParam("email") String email,
@@ -183,8 +183,8 @@ public class Sender {
 
     @ApiOperation(value = "Devuelve la información de un espacio dado su edificio e identificador de espacio")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "{\"tareasNormales\":[{\"id\":,\"estado\":,\"prioridad\":}]," +
-                    "\"tareasUrgentes\":[{\"id\":,\"estado\":,\"prioridad\":}]}")
+            @ApiResponse(code = 200, message = "{\"espacio\":{\"tipoDeEspacio\":\"HALL\",\"edificio\":\"CRE.1201.\",\"" +
+                    "reservas\":[]}}")
     })
     @GetMapping(value = STRING_ESPACIO)
     public String getInfoEspacio(@RequestParam("edificio") String edificio, @RequestParam("idEspacio") String idEspacio) {
@@ -192,16 +192,6 @@ public class Sender {
         espacio.add(STRING_ESPACIO); espacio.add(edificio); espacio.add(idEspacio); //TODO revisar
 
         String response = (String) template.convertSendAndReceive(directExchangeName, "rpc", espacio);
-        System.out.println("Received in 'gateway/Sender' <" + response + ">");
-        return response;
-    }
-
-    @PostMapping(value = STRING_AFORO)
-    public String setAforo() {
-        ArrayList<String> aforo = new ArrayList<String>();
-        aforo.add(STRING_AFORO);
-
-        String response = (String) template.convertSendAndReceive(directExchangeName, "rpc", aforo);
         System.out.println("Received in 'gateway/Sender' <" + response + ">");
         return response;
     }

@@ -113,16 +113,22 @@ public class EspacioService {
         return true;
     }
 
-    // Dada una reserva y una fecha en tipo Calendar, indica si la reserva ocupa un espacio o no
+    // Dada una reserva y un par de fechas en tipo Calendar, indica si el espacio está ocupado
     // Comprobamos si el intento de reserva se hace el mismo día, el mismo mes, el mismo año que una
     // reserva existente y si la hora de la reserva existente comienza a la vez o entre las horas de inicio
     // y fin previstas
     private boolean estaOcupado(Reserva reserva, Calendar fechaInicio, Calendar fechaFin) {
-        return reserva.getDiaReserva().getDayOfMonth() == fechaInicio.get(Calendar.DAY_OF_MONTH) &&
+        return !sonDiasDiferentes(fechaInicio, fechaFin) && reserva.getDiaReserva().getDayOfMonth() == fechaInicio.get(Calendar.DAY_OF_MONTH) &&
                 reserva.getDiaReserva().getMonthValue() == fechaInicio.get(Calendar.MONTH) &&
                 reserva.getDiaReserva().getYear() == fechaInicio.get(Calendar.YEAR) &&
                 reserva.getHoraInicio().getHour() >= fechaInicio.get(Calendar.HOUR_OF_DAY) &&
                 reserva.getHoraInicio().getHour() < fechaFin.get(Calendar.HOUR_OF_DAY);
+    }
+
+    private boolean sonDiasDiferentes(Calendar fechaInicio, Calendar fechaFin) {
+        return fechaInicio.get(Calendar.DAY_OF_MONTH) != fechaFin.get(Calendar.DAY_OF_MONTH) &&
+                fechaInicio.get(Calendar.MONTH) != fechaFin.get(Calendar.MONTH) &&
+                fechaInicio.get(Calendar.YEAR) != fechaFin.get(Calendar.YEAR);
     }
 
     // Devuelve el día como LocalDate a partir de un objeto date
