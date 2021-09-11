@@ -52,4 +52,5 @@ public class Espacio {
         this.reservas.add(r);
     }
 
+    public String getIdEspacio() { return idEspacio; }
 }

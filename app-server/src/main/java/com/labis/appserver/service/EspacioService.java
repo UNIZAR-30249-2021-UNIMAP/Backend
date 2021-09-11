@@ -79,19 +79,10 @@ public class EspacioService {
         JSONObject jsonObject = new JSONObject();
         if (espacioOptional.isPresent()) {
             Iterable<Reserva> reservas = reservaRepository.findAllByEspacio(espacioOptional.get());
-            JSONArray jsonArray = new JSONArray();
-            for (Reserva reserva : reservas) {
-                JSONObject jsonObjectReservas = new JSONObject();
-                jsonObjectReservas.put("id", reserva.getId());
-                jsonObjectReservas.put("diaReserva", reserva.getDiaReserva().toString());
-                jsonObjectReservas.put("horaInicia", reserva.getHoraInicio().toString());
-                jsonObjectReservas.put("horaFin", reserva.getHoraFin().toString());
-                jsonArray.add(jsonObjectReservas);
-            }
             Espacio espacio = espacioOptional.get();
             jsonObject.put("tipoDeEspacio", espacio.getTipoDeEspacio());
             jsonObject.put("edificio", espacio.getEdificio());
-            jsonObject.put("reservas", jsonArray);
+            jsonObject.put("idEspacio", espacio.getIdEspacio());
         }
         return jsonObject;
     }
