@@ -167,7 +167,7 @@ public class Receiver {
                     if ( !fechaFinRecibida.isEmpty() ) {
                         fechaFin = formateador.parse(fechaFinRecibida);
                     }
-                    return JSONArray.toJSONString(this.espacioService.recuperarEspaciosParametrizados(proyector, edificio, tipoEspacio, fechaInicio, fechaFin));
+                    return espacioService.recuperarEspaciosParametrizados(proyector, edificio, tipoEspacio, fechaInicio, fechaFin).toJSONString();
                 }
                 catch (Exception e) {
                     log.info(Arrays.toString(e.getStackTrace()));

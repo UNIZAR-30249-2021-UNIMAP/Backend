@@ -1,5 +1,6 @@
 package com.labis.appserver.service;
 
+import com.labis.appserver.AppServerApplication;
 import com.labis.appserver.model.Espacio;
 import com.labis.appserver.model.Persona;
 import com.labis.appserver.model.Reserva;
@@ -8,6 +9,8 @@ import com.labis.appserver.repository.PersonaRepository;
 import com.labis.appserver.repository.ReservaRepository;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -16,6 +19,7 @@ import java.util.*;
 
 @Service
 public class EspacioService {
+    private static final Logger log = LoggerFactory.getLogger(AppServerApplication.class);
 
     private final EspacioRepository espacioRepository;
     private final ReservaRepository reservaRepository;
@@ -33,21 +37,25 @@ public class EspacioService {
     }
 
     // Dados los parámetros pasados se devuelven los Espacios que cumplan con ellos
-    public List<Espacio> recuperarEspaciosParametrizados(boolean proyector, String edificio, String tipoDeEspacio, Date fechaInicio, Date fechaFin) {
+    public JSONArray recuperarEspaciosParametrizados(boolean proyector, String edificio, String tipoDeEspacio, Date fechaInicio, Date fechaFin) {
         List<Espacio> espacios = (List<Espacio>) this.espacioRepository.findAll();
-        List<Espacio> resultado = new ArrayList<Espacio>();
         Espacio espacio;
-        for (int i = 0; i < espacios.size() && resultado.size() < 20; i++) {
+        JSONArray jsonArray = new JSONArray();
+        for (int i = 0; i < espacios.size() && jsonArray.size() < 20; i++) {
             espacio = espacios.get(i);
             if (    (!proyector || espacio.getProyectoresActuales() > 0) &&
-                    (edificio.isEmpty() || espacio.getEdificio().equals(edificio)) &&
-                    (tipoDeEspacio.isEmpty() || espacio.getTipoDeEspacio().toString().equals(tipoDeEspacio)) &&
+                    (edificio.isEmpty() || espacio.getEdificio().contains(edificio)) &&
+                    (tipoDeEspacio.isEmpty() || espacio.getTipoDeEspacio().contains(tipoDeEspacio)) &&
                     this.estaLibre(fechaInicio, fechaFin, espacio.getReservas())
             ) {
-                resultado.add(espacio);
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("idEspacio", espacio.getIdEspacio());
+                jsonObject.put("tipoDeEspacio", espacio.getTipoDeEspacio());
+                jsonObject.put("edificio", espacio.getEdificio());
+                jsonArray.add(jsonObject);
             }
         }
-        return resultado;
+        return jsonArray;
     }
 
     // Reserva de espacio. Si no existe el espacio, no está libre en las horas solicitadas o no hay una cuenta
@@ -106,7 +114,7 @@ public class EspacioService {
         Iterator<Reserva> reservaIterator = reservas.iterator();
         while(reservaIterator.hasNext()) {
             Reserva reserva = reservaIterator.next();
-            if(     desde != null && estaOcupado(reserva, desdeCalendar, hastaCalendar)) {
+            if( desde != null && estaOcupado(reserva, desdeCalendar, hastaCalendar)) {
                 return false;
             }
         }
@@ -118,17 +126,13 @@ public class EspacioService {
     // reserva existente y si la hora de la reserva existente comienza a la vez o entre las horas de inicio
     // y fin previstas
     private boolean estaOcupado(Reserva reserva, Calendar fechaInicio, Calendar fechaFin) {
-        return !sonDiasDiferentes(fechaInicio, fechaFin) && reserva.getDiaReserva().getDayOfMonth() == fechaInicio.get(Calendar.DAY_OF_MONTH) &&
+        boolean aux = reserva.getDiaReserva().getDayOfMonth() == fechaInicio.get(Calendar.DAY_OF_MONTH) &&
                 reserva.getDiaReserva().getMonthValue() == fechaInicio.get(Calendar.MONTH) &&
                 reserva.getDiaReserva().getYear() == fechaInicio.get(Calendar.YEAR) &&
                 reserva.getHoraInicio().getHour() >= fechaInicio.get(Calendar.HOUR_OF_DAY) &&
-                reserva.getHoraInicio().getHour() < fechaFin.get(Calendar.HOUR_OF_DAY);
-    }
-
-    private boolean sonDiasDiferentes(Calendar fechaInicio, Calendar fechaFin) {
-        return fechaInicio.get(Calendar.DAY_OF_MONTH) != fechaFin.get(Calendar.DAY_OF_MONTH) &&
-                fechaInicio.get(Calendar.MONTH) != fechaFin.get(Calendar.MONTH) &&
-                fechaInicio.get(Calendar.YEAR) != fechaFin.get(Calendar.YEAR);
+                reserva.getHoraInicio().getHour() <= fechaFin.get(Calendar.HOUR_OF_DAY);
+        log.info("estaOcupado: " + aux);
+        return aux;
     }
 
     // Devuelve el día como LocalDate a partir de un objeto date
