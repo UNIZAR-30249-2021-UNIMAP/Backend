@@ -43,11 +43,13 @@ public class Receiver {
         String guarda = message.remove(0);
         switch (guarda) {
             case STRING_LOGIN:
+                // Inicio de sesión
                 String email = message.remove(0);
                 String contrasena = message.remove(0);
                 return personaService.loginPersona(email, contrasena).toJSONString();
 
             case STRING_REGISTRO:
+                // Registro de un nuevo usuario Persona
                 email = message.remove(0);
                 String nombre = message.remove(0);
                 contrasena = message.remove(0);
@@ -61,9 +63,11 @@ public class Receiver {
                 }
 
             case STRING_INCIDENCIA:
+                // Listado de todas las incidencias reportadas
                 return incidenciaService.informeTodasIncidenciasReportadas().toJSONString();
 
             case STRING_INCIDENCIA_REPORTE:
+                // Reportar una incidencia
                 String idEspacio = message.remove(0);
                 String descripcion = message.remove(0);
                 email = message.remove(0);
@@ -88,6 +92,7 @@ public class Receiver {
                 }
 
             case STRING_INCIDENCIA_ADMIN:
+                // Asignar o rechazar incidencia
                 long idIncidencia = Long.parseLong(message.remove(0));
                 boolean aceptar = Boolean.parseBoolean(message.remove(0));
                 long idEmpleado = 0;
@@ -109,19 +114,21 @@ public class Receiver {
                 }
 
             case STRING_MANTENIMIENTO:
-                //lista de empleados
+                // Listado de empleados
                 return personalMantenimientoService.listaOcupacionPersonalMantenimiento().toJSONString();
 
             case STRING_ESPACIO:
                 if (message.size() == 2) {
+                    // Recuperación de la información de un espacio
                     String edificio = message.remove(0);
-                    String idEdificio = getIdEdificio(edificio);
+                    String idEdificio = obtenerIdEdificio(edificio);
                     idEspacio = idEdificio + message.remove(0);
                     return espacioService.consultarInformacionEspacio(idEspacio).toJSONString();
                 }
                 else {
+                    // Reserva de un espacio
                     String edificio = message.remove(0);
-                    String idEdificio = getIdEdificio(edificio);
+                    String idEdificio = obtenerIdEdificio(edificio);
                     idEspacio = idEdificio + message.remove(0);
                     log.info("idEspacio: " + idEspacio);
                     email = message.remove(0);
@@ -141,14 +148,11 @@ public class Receiver {
                     }
                 }
 
-            case STRING_AFORO:
-                return "Aforo";
-
             case STRING_ESPACIOS:
                 // Listado de espacios filtrado
                 boolean proyector = message.remove(0).equals("true");
                 String edificio = message.remove(0);
-                edificio = getIdEdificio(edificio);
+                edificio = obtenerIdEdificio(edificio);
                 String tipoEspacio = message.remove(0);
                 SimpleDateFormat formateador = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss");
                 try {
@@ -171,6 +175,7 @@ public class Receiver {
                 }
 
             case STRING_REGISTRO_MANTENIMIENTO:
+                // Registra un personal de mantenimiento
                 nombre = message.remove(0);
                 email = message.remove(0);
                 String apellidos = message.remove(0);
@@ -187,7 +192,7 @@ public class Receiver {
         }
     }
 
-    private String getIdEdificio(String edificio) {
+    private String obtenerIdEdificio(String edificio) {
         if ( edificio.contains("ada")) {
             return "CRE.1200.";
         } else if ( edificio.contains("torres")) {
